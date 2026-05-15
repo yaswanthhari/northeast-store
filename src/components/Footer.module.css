@@ -1,111 +1,171 @@
 .footer {
-  background-color: var(--color-primary-dark);
-  color: var(--color-text-inverse);
-  padding-top: 4rem;
-  margin-top: 4rem;
+  background-color: #0a2519; /* Deeper green */
+  color: white;
+  padding-top: 6rem;
+  border-top: 4px solid #d4af37; /* Gold accent top */
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  opacity: 0.05;
+  pointer-events: none;
 }
 
 .footerGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 4rem;
+  padding-bottom: 6rem;
+  position: relative;
+  z-index: 1;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .footerGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1.8fr 1fr 1fr 1fr;
   }
 }
 
-@media (min-width: 1024px) {
-  .footerGrid {
-    grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  }
-}
-
-.logo {
-  display: inline-block;
-  margin-bottom: 1rem;
+.brandSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .logoImage {
-  height: 140px;
-  width: auto;
-  object-fit: contain;
-  background-color: white;
-  border-radius: var(--radius-lg);
-  padding: 0.5rem;
+  filter: brightness(0) invert(1); /* Make logo white if appropriate, or keep as is */
+  /* If the logo is a colored image, maybe don't invert. Let's keep it normal for now but with a soft glow */
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
 }
 
 .description {
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  max-width: 400px;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   font-size: 0.95rem;
-  max-width: 300px;
+  opacity: 0.9;
+  color: #d4af37; /* Gold icons */
+}
+
+.contactItem span {
+  color: white;
 }
 
 .heading {
   font-family: var(--font-sans);
   font-size: 1.1rem;
-  color: var(--color-text-inverse);
-  margin-bottom: 1.25rem;
-  font-weight: 600;
+  font-weight: 800;
+  color: #d4af37;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: #d4af37;
 }
 
 .linkList {
+  list-style: none;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.25rem;
 }
 
 .linkList a {
-  color: rgba(255, 255, 255, 0.7);
-  transition: color var(--transition-fast);
-  font-size: 0.95rem;
+  color: white;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  display: inline-block;
 }
 
 .linkList a:hover {
-  color: var(--color-accent);
-}
-
-.newsletterDesc {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-}
-
-.newsletterForm {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.input {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  font-family: inherit;
-}
-
-.input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--color-accent);
-}
-
-.submitBtn {
-  width: 100%;
+  opacity: 1;
+  color: #d4af37;
+  transform: translateX(8px);
 }
 
 .bottomBar {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem 0;
-  text-align: center;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 2.5rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.bottomContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .bottomContent {
+    flex-direction: row;
+  }
+}
+
+.copyright {
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
+.payments {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.payLabel {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.payIcons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.payBadge {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
 }

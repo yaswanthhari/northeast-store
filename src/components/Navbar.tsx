@@ -5,9 +5,26 @@ import Image from 'next/image';
 import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navbar.module.css';
+import { useCart } from '@/context/CartContext';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { totalItems, setIsOpen } = useCart();
+  const router = useRouter();
+
+
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   return (
     <header className={`${styles.header} glass`}>
@@ -25,19 +42,42 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className={styles.desktopNav}>
-          <Link href="/products" className={styles.navLink}>Shop</Link>
-          <Link href="/story" className={styles.navLink}>Our Story</Link>
-          <Link href="/categories" className={styles.navLink}>Categories</Link>
+          <Link href="/products" className={styles.navLink}>Food</Link>
+          <Link href="/products?category=smoked-meats" className={styles.navLink}>Smoked Meats</Link>
+          <Link href="/blog" className={styles.navLink}>Recipes</Link>
         </nav>
 
         <div className={styles.iconActions}>
-          <button className={styles.iconBtn} aria-label="Search">
-            <Search size={20} />
-          </button>
-          <Link href="/cart" className={styles.iconBtn} aria-label="Cart">
+          <div className={`${styles.searchWrapper} ${isSearchOpen ? styles.searchActive : ''}`}>
+            {isSearchOpen && (
+              <form onSubmit={handleSearch} className={styles.searchForm}>
+                <input 
+                  type="text" 
+                  placeholder="Search here..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className={styles.searchInput}
+                />
+              </form>
+            )}
+            <button 
+              className={styles.iconBtn} 
+              aria-label="Search"
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+            >
+              {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+            </button>
+          </div>
+
+          <button 
+            className={styles.iconBtn} 
+            aria-label="Cart"
+            onClick={() => setIsOpen(true)}
+          >
             <ShoppingCart size={20} />
-            <span className={styles.cartBadge}>0</span>
-          </Link>
+            {totalItems > 0 && <span className={styles.cartBadge}>{totalItems}</span>}
+          </button>
           <Link href="/login" className={styles.iconBtn} aria-label="User Account">
             <User size={20} />
           </Link>
@@ -54,9 +94,11 @@ export default function Navbar() {
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <nav className={styles.mobileNav}>
-          <Link href="/products" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
-          <Link href="/story" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Our Story</Link>
-          <Link href="/categories" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Categories</Link>
+          <Link href="/products" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Food</Link>
+          <Link href="/products?category=smoked-meats" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Smoked Meats</Link>
+          <Link href="/blog" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Recipes</Link>
+          <Link href="/login" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Login / Register</Link>
+          <Link href="/api/auth/logout" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#e53e3e' }}>Log Out</Link>
         </nav>
       )}
     </header>

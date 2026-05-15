@@ -1,0 +1,331 @@
+.page {
+  min-height: 100vh;
+  background-color: #fcfcfc;
+  padding: 5rem 1.5rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(18, 64, 43, 0.6);
+  text-decoration: none;
+  margin-bottom: 3rem;
+  transition: color 0.2s;
+  font-size: 0.9rem;
+}
+
+.backLink:hover {
+  color: #12402b;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+.sectionTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  color: #12402b;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionTitle svg {
+  color: #d4af37;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fullWidth {
+  grid-column: span 2;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: rgba(18, 64, 43, 0.6);
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: white;
+  border: 1px solid rgba(18, 64, 43, 0.1);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.2s;
+  color: #12402b;
+}
+
+.input:focus {
+  border-color: #12402b;
+}
+
+.paymentMethod {
+  margin-top: 3rem;
+}
+
+.codOption {
+  padding: 1rem;
+  border: 2px solid #12402b;
+  background-color: white;
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #12402b;
+}
+
+.paymentNote {
+  font-size: 0.85rem;
+  color: rgba(18, 64, 43, 0.4);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+.orderBtn {
+  grid-column: span 2;
+  margin-top: 3rem;
+  padding: 1.25rem;
+  background-color: #12402b;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(18, 64, 43, 0.1);
+}
+
+.orderBtn:hover:not(:disabled) {
+  background-color: #1c5c3e;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(18, 64, 43, 0.2);
+}
+
+.orderBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.summaryCard {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 4px;
+  border: 1px solid rgba(18, 64, 43, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 6rem;
+}
+
+.summaryTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #12402b;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(18, 64, 43, 0.1);
+}
+
+.itemList {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 2rem;
+  padding-right: 0.5rem;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.itemDetails {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qtyBadge {
+  width: 24px;
+  height: 24px;
+  background-color: rgba(18, 64, 43, 0.05);
+  color: #12402b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.itemName {
+  color: #12402b;
+  font-weight: 500;
+}
+
+.itemPrice {
+  color: rgba(18, 64, 43, 0.6);
+}
+
+.totals {
+  border-top: 1px solid rgba(18, 64, 43, 0.1);
+  padding-top: 1.5rem;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  color: rgba(18, 64, 43, 0.6);
+}
+
+.grandTotal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #12402b;
+  font-weight: 700;
+}
+
+.successPage {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  background-color: #12402b;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.successTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #12402b;
+  margin-bottom: 1rem;
+}
+
+.successText {
+  color: rgba(18, 64, 43, 0.6);
+  max-width: 450px;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.returnBtn {
+  padding: 1rem 2.5rem;
+  background-color: #12402b;
+  color: white;
+  text-decoration: none;
+  border-radius: 2px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.returnBtn:hover {
+  background-color: #1c5c3e;
+}
+
+.loginBanner {
+  background-color: #fff9e6;
+  border: 1px solid #ffeeba;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: #856404;
+}
+
+.loginInlineBtn {
+  margin-left: auto;
+  color: #12402b;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.loadingContainer {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(18, 64, 43, 0.6);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #12402b;
+  width: 40px;
+  height: 40px;
+}
+
+.btnSpinner {
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+  width: 18px;
+  height: 18px;
+}
+
+.errorMessage {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

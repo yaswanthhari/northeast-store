@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Footer.module.css';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -11,54 +12,69 @@ export default function Footer() {
             <Image 
               src="/logo.jpg" 
               alt="Northeast Store Logo" 
-              width={200} 
-              height={200} 
+              width={160} 
+              height={160} 
               className={styles.logoImage} 
             />
           </Link>
           <p className={styles.description}>
-            Discover unique, region-specific organic and traditional food products from all eight states of Northeast India, sourced directly from local producers.
+            The NorthEast Store is an online marketplace dedicated to promoting and selling authentic products from the eight states of Northeast India.
           </p>
+          <div className={styles.contactInfo}>
+            <div className={styles.contactItem}>
+              <Phone size={16} />
+              <span>+91 6033 046 983</span>
+            </div>
+            <div className={styles.contactItem}>
+              <Mail size={16} />
+              <span>support@northeaststore.in</span>
+            </div>
+            <div className={styles.contactItem}>
+              <MapPin size={16} />
+              <span>Eight States Building, Guwahati, Assam - 781001</span>
+            </div>
+          </div>
         </div>
         
         <div className={styles.linksSection}>
-          <h3 className={styles.heading}>Explore</h3>
+          <h3 className={styles.heading}>Information</h3>
           <ul className={styles.linkList}>
-            <li><Link href="/products">Shop All</Link></li>
-            <li><Link href="/story">Our Story</Link></li>
-            <li><Link href="/categories">Food Categories</Link></li>
-            <li><Link href="/artisans">Local Producers</Link></li>
+            <li><Link href="/story">About Us</Link></li>
+            <li><Link href="/delivery">Delivery</Link></li>
+            <li><Link href="/privacy">Privacy Policy</Link></li>
+            <li><Link href="/terms">Terms & Conditions</Link></li>
           </ul>
         </div>
         
         <div className={styles.linksSection}>
           <h3 className={styles.heading}>Customer Service</h3>
           <ul className={styles.linkList}>
-            <li><Link href="/contact">Contact Us</Link></li>
-            <li><Link href="/faq">FAQ</Link></li>
-            <li><Link href="/shipping">Shipping Policy</Link></li>
-            <li><Link href="/returns">Returns</Link></li>
+            <li><Link href="/contact">Contact</Link></li>
+            <li><Link href="/returns">Returns & Cancellations</Link></li>
+            <li><Link href="/faq">FAQs</Link></li>
           </ul>
         </div>
         
-        <div className={styles.newsletterSection}>
-          <h3 className={styles.heading}>Stay Connected</h3>
-          <p className={styles.newsletterDesc}>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
-          <form className={styles.newsletterForm}>
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              className={styles.input}
-              required 
-            />
-            <button type="submit" className={`btn btn-accent ${styles.submitBtn}`}>Subscribe</button>
-          </form>
+        <div className={styles.linksSection}>
+          <h3 className={styles.heading}>My Account</h3>
+          <ul className={styles.linkList}>
+            <li><Link href="/login">My Account</Link></li>
+            <li><Link href="/login">Order History</Link></li>
+          </ul>
         </div>
       </div>
       
       <div className={styles.bottomBar}>
-        <div className="container">
-          <p>&copy; {new Date().getFullYear()} Northeast Store. All rights reserved.</p>
+        <div className={`container ${styles.bottomContent}`}>
+          <p className={styles.copyright}>Copyright © 2014 - {new Date().getFullYear()}, The NorthEast Store Private Limited</p>
+          <div className={styles.payments}>
+            <span className={styles.payLabel}>We Accept:</span>
+            <div className={styles.payIcons}>
+              {['Cards', 'UPI', 'GPay', 'PhonePe'].map(p => (
+                <Link key={p} href="/payment" className={styles.payBadge}>{p}</Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </footer>

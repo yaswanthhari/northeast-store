@@ -11,16 +11,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const existingUser = findMockUserByEmail(email);
+    const existingUser = await findMockUserByEmail(email);
     if (existingUser) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
     }
 
     // In a real app, hash the password using bcrypt!
-    const newUser = { id: Date.now().toString(), name, email, password, role: 'user' };
-    saveMockUser(newUser);
+    const newUser = { name, email, password };
+    const savedUser = await saveMockUser(newUser);
 
-    const token = await signToken({ id: newUser.id, email: newUser.email, role: newUser.role, name: newUser.name });
+    const token = await signToken({ id: savedUser.id, email: savedUser.email, role: 'user', name: savedUser.name });
     
     const cookieStore = await cookies();
     cookieStore.set({

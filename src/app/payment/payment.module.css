@@ -1,0 +1,93 @@
+.container {
+  min-height: 100vh;
+  background-color: #fcfcfc;
+}
+
+.header {
+  background: linear-gradient(135deg, #12402b, #1c5c3e);
+  color: white;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  opacity: 0.8;
+  font-size: 1.1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 5rem;
+}
+
+.card {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.icon {
+  color: #d4af37;
+}
+
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  color: #12402b;
+  font-size: 1.5rem;
+}
+
+.card p {
+  color: rgba(18, 64, 43, 0.6);
+  line-height: 1.6;
+}
+
+.badge {
+  background-color: #f0f4f0;
+  color: #12402b;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.securityInfo {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 4rem;
+  background-color: #12402b;
+  color: white;
+  border-radius: 12px;
+}
+
+.securityInfo h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #d4af37;
+}
+
+.securityInfo p {
+  opacity: 0.9;
+  line-height: 1.8;
+}

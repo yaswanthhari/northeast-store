@@ -1,171 +1,205 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Mountain, HeartHandshake, Leaf, ShoppingBag } from 'lucide-react';
+import { Mountain, HeartHandshake, Leaf, ShoppingBag, ArrowRight, Star, Quote, UtensilsCrossed } from 'lucide-react';
+import DandelionEffect from '@/components/DandelionEffect';
+import LeafEffect from '@/components/LeafEffect';
+import ProductCard from '@/components/ProductCard';
+import HeroContent from '@/components/HeroContent';
 import styles from './page.module.css';
+import { prisma } from '@/lib/db';
 
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'Organic Black Rice',
-    price: 350,
-    state: 'Assam',
-    image: '/black_rice.png',
-  },
-  {
-    id: 2,
-    name: 'Naga King Chili (Raja Mircha)',
-    price: 450,
-    state: 'Nagaland',
-    image: '/king_chili.png',
-  },
-  {
-    id: 3,
-    name: 'Large Cardamom',
-    price: 800,
-    state: 'Sikkim',
-    image: '/cardamom.png',
-  },
-  {
-    id: 4,
-    name: 'Lakadong Turmeric',
-    price: 500,
-    state: 'Meghalaya',
-    image: '/turmeric.png',
-  }
-];
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
+export default async function Home() {
+  const popularProducts = await prisma.product.findMany({
+    where: { isPopular: true },
+    take: 6,
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const latestProducts = await prisma.product.findMany({
+    where: { isNew: true },
+    take: 4,
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const topSelling = await prisma.product.findMany({
+    where: { isBestseller: true },
+    take: 4,
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const testimonials = await prisma.testimonial.findMany({ take: 3 });
+  const recipes = await prisma.recipe.findMany({ take: 3 });
+
   return (
     <div className={styles.page}>
       {/* Hero Section */}
       <section className={styles.hero}>
+        <div className={styles.heroBackground}>
+          <Image 
+            src="/northeast_hero.png" 
+            alt="Northeast India Landscapes" 
+            fill 
+            priority
+            className={styles.heroImage}
+          />
+        </div>
         <div className={styles.heroOverlay}></div>
         <div className={`container ${styles.heroContent}`}>
-          <motion.h1 
-            className={styles.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            NortheastStore.in
-          </motion.h1>
-          <motion.p 
-            className={styles.subtitle}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          >
-            Discover unique, region-specific organic and traditional food products from all eight states of Northeast India, sourced directly from local producers.
-          </motion.p>
-          <motion.div 
-            className={styles.ctaGroup}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          >
-            <Link href="/products" className="btn btn-accent">
-              Shop the Collection
-            </Link>
-            <Link href="/story" className="btn btn-outline glass" style={{ color: 'white', borderColor: 'rgba(255,255,255,0.4)' }}>
-              Discover Our Story
-            </Link>
-          </motion.div>
+          <HeroContent />
         </div>
       </section>
 
-      {/* Featured Products Section */}
+      {/* Service Ribbons */}
+      <section className={styles.ribbon}>
+        <div className="container">
+          <div className={styles.ribbonGrid}>
+            <div className={styles.ribbonItem}>
+              <ShoppingBag size={24} />
+              <span>Free Shipping*</span>
+            </div>
+            <div className={styles.ribbonItem}>
+              <UtensilsCrossed size={24} />
+              <span>Authentic Recipes</span>
+            </div>
+            <div className={styles.ribbonItem}>
+              <HeartHandshake size={24} />
+              <span>Direct from Farmers</span>
+            </div>
+            <div className={styles.ribbonItem}>
+              <Leaf size={24} />
+              <span>Secure Shopping</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Picks */}
       <section className={styles.section}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Featured Authentic Foods</h2>
-            <Link href="/products" className={styles.viewAll}>View All →</Link>
+            <h2 className={styles.sectionTitle}>Popular Picks</h2>
+            <Link href="/products" className={styles.viewAll}>
+              View All <ArrowRight size={16} />
+            </Link>
           </div>
-          
           <div className={styles.productGrid}>
-            {featuredProducts.map((product, index) => (
-              <motion.div 
-                key={product.id} 
-                className={styles.productCard}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <div className={styles.imageContainer}>
-                  <Image 
-                    src={product.image} 
-                    alt={product.name}
-                    fill
-                    className={styles.productImage}
-                  />
-                  <div className={styles.imageOverlay}></div>
-                  <span className={styles.stateTag}>{product.state}</span>
-                </div>
-                <div className={styles.productInfo}>
-                  <h3 className={styles.productName}>{product.name}</h3>
-                  <div className={styles.productFooter}>
-                    <p className={styles.productPrice}>₹{product.price.toLocaleString()}</p>
-                    <button className={styles.addToCartBtn}>+</button>
-                  </div>
-                </div>
-              </motion.div>
+            {popularProducts.map((p, i) => (
+              <ProductCard key={p.id} product={p as any} index={i} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Promise Section */}
-      <section className={`${styles.section} ${styles.promiseSection}`}>
+      {/* What We Do / Mission */}
+      <section className={styles.missionSection}>
         <div className="container">
-          <div className={styles.promiseGrid}>
-            <motion.div 
-              className={styles.promiseItem}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className={styles.promiseIcon}><Mountain size={40} color="var(--color-primary)" strokeWidth={1.5} /></div>
-              <h3 className={styles.promiseTitle}>Cultural Promotion</h3>
-              <p>Preserving and showcasing the unique food culture and heritage of Northeast India.</p>
-            </motion.div>
-            <motion.div 
-              className={styles.promiseItem}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className={styles.promiseIcon}><HeartHandshake size={40} color="var(--color-primary)" strokeWidth={1.5} /></div>
-              <h3 className={styles.promiseTitle}>Community Support</h3>
-              <p>Empowering local farmers, artisans, and small businesses with a wider reach.</p>
-            </motion.div>
-            <motion.div 
-              className={styles.promiseItem}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <div className={styles.promiseIcon}><Leaf size={40} color="var(--color-primary)" strokeWidth={1.5} /></div>
-              <h3 className={styles.promiseTitle}>Authentic Access</h3>
-              <p>Providing genuine, high-quality organic and traditional products.</p>
-            </motion.div>
-            <motion.div 
-              className={styles.promiseItem}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              <div className={styles.promiseIcon}><ShoppingBag size={40} color="var(--color-primary)" strokeWidth={1.5} /></div>
-              <h3 className={styles.promiseTitle}>Seamless Experience</h3>
-              <p>Delivering a smooth and accessible online shopping experience for regional goods.</p>
-            </motion.div>
+          <div className={styles.missionGrid}>
+            <div className={styles.missionContent}>
+              <h2 className={styles.missionTitle}>What We Do</h2>
+              <p className={styles.missionText}>
+                NortheastStore is an online marketplace dedicated to promoting and selling authentic products from the eight states of Northeast India. 
+                We serve as a digital bridge between local producers, farmers, and small businesses from the region and customers looking for traditional, organic food products.
+              </p>
+              <div className={styles.stats}>
+                <div className={styles.statItem}>
+                  <h3>8</h3>
+                  <span>States</span>
+                </div>
+                <div className={styles.statItem}>
+                  <h3>128+</h3>
+                  <span>Products</span>
+                </div>
+                <div className={styles.statItem}>
+                  <h3>50+</h3>
+                  <span>Farmers</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.missionImageWrapper}>
+              <Image src="/northeast_hero.png" alt="What We Do" width={600} height={400} className={styles.missionImage} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest & Bestselling Products */}
+      <section className={styles.section} style={{ backgroundColor: '#f9fbf9' }}>
+        <div className="container">
+          <div className={styles.rowGrid}>
+            <div className={styles.col}>
+              <h2 className={styles.rowTitle}>Our Latest Products</h2>
+              <div className={styles.productList}>
+                {latestProducts.map((p, i) => (
+                  <ProductCard key={p.id} product={p as any} index={i} />
+                ))}
+              </div>
+            </div>
+            <div className={styles.col}>
+              <h2 className={styles.rowTitle}>Top Selling Products</h2>
+              <div className={styles.productList}>
+                {topSelling.map((p, i) => (
+                  <ProductCard key={p.id} product={p as any} index={i} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className={styles.testimonialSection}>
+        <div className="container" style={{ position: 'relative' }}>
+          <div className={styles.sectionHeaderCenter}>
+            <Quote size={40} className={styles.quoteIcon} />
+            <h2 className={styles.sectionTitle}>Real People, Real Stories</h2>
+          </div>
+          <div className={styles.testimonialGrid}>
+            {testimonials.map((t) => (
+              <div key={t.id} className={styles.testimonialCard}>
+                <div className={styles.stars}>
+                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#d4af37" color="#d4af37" />)}
+                </div>
+                <p className={styles.testimonialContent}>"{t.content}"</p>
+                <div className={styles.testimonialUser}>
+                  <strong>{t.name}</strong>
+                  <span>{t.city}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Blog / Recipes */}
+      <section className={styles.section}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>From our Blog</h2>
+            <Link href="/blog" className={styles.viewAll}>
+              Latest Recipes <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className={styles.recipeGrid}>
+            {recipes.map((r) => (
+              <div key={r.id} className={styles.recipeCard}>
+                <div className={styles.recipeImageWrapper}>
+                  <Image
+                    src={r.image || '/story_hero.png'}
+                    alt={r.title}
+                    fill
+                    className={styles.recipeImage}
+                  />
+                  <span className={styles.recipeTag}>RECIPE</span>
+                </div>
+                <div className={styles.recipeContent}>
+                  <h3>{r.title}</h3>
+                  <p>{r.summary}</p>
+                  <Link href={`/blog/${r.id}`} className={styles.readMore}>Read Recipe</Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

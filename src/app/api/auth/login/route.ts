@@ -11,7 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
     }
 
-    const user = findMockUserByEmail(email);
+    const user = await findMockUserByEmail(email);
     
     // In a real app, use bcrypt.compare!
     if (!user || user.password !== password) {

@@ -64,7 +64,40 @@
 .iconActions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.searchForm {
+  margin-right: 0.5rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.searchInput {
+  background: rgba(18, 64, 43, 0.05);
+  border: 1px solid rgba(18, 64, 43, 0.1);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  outline: none;
+  width: 200px;
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  transition: all 0.3s;
+}
+
+.searchInput:focus {
+  background: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(18, 64, 43, 0.05);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .iconBtn {

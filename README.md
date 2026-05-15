@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Northeast Store 🌿
 
-## Getting Started
+An online marketplace for authentic food products from the 8 states of Northeast India. Built with **Next.js 16**, **Prisma**, **PostgreSQL (Neon)**, and deployed on **Vercel**.
 
-First, run the development server:
+## 🛍️ Features
+
+- 24+ authentic Northeast Indian products
+- Category filtering, price range filter, sorting
+- Shopping cart (localStorage persistent)
+- User auth (register/login)
+- Checkout & order flow
+- Blog/Recipe section
+- Responsive, glassmorphism design
+
+## 🚀 Local Development (SQLite)
 
 ```bash
+# 1. Clone the repo
+git clone https://github.com/YOUR_USERNAME/northeast-store.git
+cd northeast-store
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up local env (SQLite)
+echo 'DATABASE_URL="file:./dev.db"' > .env
+
+# 4. Generate Prisma client
+npx prisma generate
+
+# 5. Push schema to local db
+npx prisma db push
+
+# 6. Seed the database
+npx prisma db seed
+
+# 7. Run dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Test account:** `test@example.com` / `password123`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ☁️ Production Setup (Neon PostgreSQL)
 
-## Learn More
+1. Create a free database at [neon.tech](https://neon.tech)
+2. Copy the connection strings from Neon dashboard
+3. Add to your `.env` (or Vercel environment variables):
 
-To learn more about Next.js, take a look at the following resources:
+```
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Run migrations: `npx prisma migrate deploy`
+5. Seed the database: `npx prisma db seed`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧱 Tech Stack
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Database (local) | SQLite via Prisma |
+| Database (prod) | Neon PostgreSQL |
+| Styling | Vanilla CSS Modules |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| ORM | Prisma |

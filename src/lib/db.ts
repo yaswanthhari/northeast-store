@@ -1,23 +1,34 @@
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 
-const DB_PATH = path.join(process.cwd(), 'users.json');
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-export function getMockUsers() {
-  if (!fs.existsSync(DB_PATH)) {
-    fs.writeFileSync(DB_PATH, JSON.stringify([]));
-  }
-  const data = fs.readFileSync(DB_PATH, 'utf-8');
-  return JSON.parse(data);
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query'],
+  });
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+
+// Auth Helpers
+export async function findUserByEmail(email: string) {
+  return await prisma.user.findUnique({
+    where: { email },
+  });
 }
 
-export function saveMockUser(user: any) {
-  const users = getMockUsers();
-  users.push(user);
-  fs.writeFileSync(DB_PATH, JSON.stringify(users, null, 2));
+export async function createUser(name: string, email: string, password: string) {
+  return await prisma.user.create({
+    data: {
+      name,
+      email,
+      password, // Note: In production, always hash passwords!
+    },
+  });
 }
 
-export function findMockUserByEmail(email: string) {
-  const users = getMockUsers();
-  return users.find((u: any) => u.email === email);
-}
+// Compatibility Aliases for existing routes
+export const findMockUserByEmail = findUserByEmail;
+export const saveMockUser = async (user: any) => {
+  return await createUser(user.name, user.email, user.password);
+};
