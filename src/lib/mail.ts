@@ -86,36 +86,57 @@ Thank you for choosing The NorthEast Store! We've received your order...
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `;
 
-  try {
-    // 1. Try to send real email if configured
-    console.log('[Email Diagnostic] Checking SMTP Variables:');
-    console.log(`- SMTP_USER: ${process.env.SMTP_USER ? 'PRESENT' : 'MISSING'}`);
-    console.log(`- SMTP_PASS: ${process.env.SMTP_PASS ? 'PRESENT' : 'MISSING'}`);
-    console.log(`- SMTP_HOST: ${process.env.SMTP_HOST ? 'PRESENT' : 'MISSING'}`);
-    console.log(`- SMTP_PORT: ${process.env.SMTP_PORT ? 'PRESENT' : 'MISSING'}`);
+  // --- FAIL-SAFE TRANSPORTER CONFIG ---
+  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
 
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const from = `"The NorthEast Store" <${process.env.SMTP_USER}>`;
+  if (!user || !pass) {
+    console.error('[Email Service] CRITICAL ERROR: SMTP_USER or SMTP_PASS is missing in environment variables!');
+    return;
+  }
+
+  // Define the two ways to connect
+  const connectionOptions = [
+    { port: 465, secure: true },  // SSL (What we tried)
+    { port: 587, secure: false }, // TLS (More compatible with Vercel)
+  ];
+
+  let lastError = null;
+  for (const option of connectionOptions) {
+    try {
+      console.log(`[Email Service] Attempting delivery via Port ${option.port}...`);
       
+      const transporter = nodemailer.createTransport({
+        host,
+        port: option.port,
+        secure: option.secure,
+        auth: { user, pass },
+        tls: { rejectUnauthorized: false }
+      });
+
       await transporter.sendMail({
-        from: from,
+        from: `"The NorthEast Store" <${user}>`,
         to: userEmail,
-        bcc: process.env.SMTP_USER, // Always send a copy to the admin
+        bcc: user, 
         subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
         text: textContent,
         html: htmlContent,
       });
-      console.log(`[Email Service] Real email sent to ${userEmail}`);
-    } else {
-      console.log(`[Email Service] SMTP not configured. Skipping real email delivery.`);
-    }
 
-    // 2. Persistent Simulation Log
-    const logPath = path.join(process.cwd(), 'order-emails.log');
-    fs.appendFileSync(logPath, `\n--- NEW EMAIL SENT AT ${new Date().toLocaleString()} ---\n` + textContent);
-    console.log(`[Email Service] Email recorded in simulation log.`);
-    
-  } catch (err) {
-    console.error('[Email Service] Error in email delivery process:', err);
+      console.log(`[Email Service] SUCCESS! Email sent via Port ${option.port}.`);
+      
+      // Also log to our persistent file for audit
+      const logPath = path.join(process.cwd(), 'order-emails.log');
+      fs.appendFileSync(logPath, `\n--- SUCCESS VIA PORT ${option.port} AT ${new Date().toLocaleString()} ---\nTo: ${userEmail}\n`);
+      
+      return; // Exit if successful
+    } catch (err: any) {
+      console.warn(`[Email Service] Port ${option.port} failed: ${err.message}`);
+      lastError = err;
+    }
   }
+
+  // If we get here, both ports failed
+  console.error('[Email Service] ALL DELIVERY ATTEMPTS FAILED:', lastError);
 }
