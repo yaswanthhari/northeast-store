@@ -1,77 +1,91 @@
-# Northeast Store 🌿
+# 🌿 Northeast Store Marketplace
 
-An authentic marketplace for organic and traditional food products from the Eight States of Northeast India. 
+<div align="center">
+  <img src="https://northeast-store.vercel.app/logo.jpg" width="200" alt="Northeast Store Logo" />
+  <p align="center">
+    <strong>Authentic Flavors of the Eight States</strong>
+    <br />
+    <a href="https://northeast-store.vercel.app"><strong>Live Demo 🚀</strong></a>
+  </p>
 
-**Live Demo:** [https://northeast-store.vercel.app](https://northeast-store.vercel.app)
-
----
-
-## 🌟 Key Features
-
-### 🛒 Marketplace
-- **24+ Curated Products**: Authentic items sourced directly from local producers.
-- **Advanced Filtering**: Filter by category (Food, Smoked Meats, Spices), State (Assam, Manipur, Nagaland, etc.), and Price.
-- **Smart Search**: Find products instantly using the search bar.
-- **Persistent Cart**: Global shopping cart using React Context and LocalStorage.
-
-### 👑 Collaborative Admin Dashboard (`/admin`)
-- **Real-time User Tracking**: Monitor currently online team members and users.
-- **Role Management**: Promote users to **ADMIN** or demote them to **USER** with one click.
-- **Activity Monitoring**: Detailed "Last Active" timestamps for all registered users.
-- **Team Collaboration**: Secure access for multiple administrators to manage the store.
-
-### 📖 Recipe Blog
-- **Traditional Recipes**: Learn how to cook authentic Northeastern dishes like Black Sesame Potato Curry and Naga Style Pork.
-- **Interactive Guides**: Detailed step-by-step instructions for regional staples.
+  [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+  [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+  [![Neon](https://img.shields.io/badge/Database-Neon_PostgreSQL-00E599?style=flat-square&logo=postgresql)](https://neon.tech/)
+  [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com/)
+</div>
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Features
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Turbopack)
-- **Database**: [Neon PostgreSQL](https://neon.tech/) (Serverless Cloud Database)
-- **ORM**: [Prisma](https://www.prisma.io/)
-- **Authentication**: JWT-based secure sessions with Middleware protection.
-- **Styling**: Premium Glassmorphism UI with Vanilla CSS Modules.
-- **Deployment**: [Vercel](https://vercel.com/)
+### 🛍️ Premium Marketplace
+- **24+ Authentic Products**: Sourced directly from local producers in the Eight States.
+- **Glassmorphism UI**: High-end, modern design with smooth animations.
+- **Persistent Cart**: Global shopping cart that stays with you across sessions.
+- **Advanced Search & Filter**: Find products by category, state, and price.
+
+### 👑 Collaborative Admin Ecosystem (`/admin`)
+- **Live User Monitoring**: See exactly who is online in real-time.
+- **Role-Based Access**: Secure management system with Admin/User roles.
+- **Collaborative Controls**: Promote or demote team members instantly.
+- **Activity Logs**: Track the "Last Active" status of all registered users.
+
+### 🍜 Regional Culinary Hub
+- **Authentic Recipes**: Discover traditional secrets like Black Sesame Potato Curry.
+- **Regional Blog**: Learn about the culture and heritage of the Eight States.
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Getting Started
 
+> [!NOTE]
+> The **localhost** links below only work when you are running the project on your own machine.
+
+### 💻 Local Development
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/yaswanthhari/northeast-store.git
 cd northeast-store
 
-# 2. Install dependencies
+# Install dependencies
 npm install
 
-# 3. Environment Setup
-# Create a .env file with your DATABASE_URL (SQLite or PostgreSQL)
+# Setup Environment
 echo 'DATABASE_URL="file:./dev.db"' > .env
 
-# 4. Initialize Database
+# Initialize Database (SQLite)
 npx prisma generate
 npx prisma db push
 npx prisma db seed
 
-# 5. Run Development Server
+# Launch Development Server
 npm run dev
 ```
-
-Visit `http://localhost:3000` to see the site.
-
----
-
-## 📋 Administrative Access
-
-To access the **Admin Dashboard**:
-1. Log in to the application.
-2. Navigate to [https://northeast-store.vercel.app/admin](https://northeast-store.vercel.app/admin).
-3. Ensure your account has the `ADMIN` role in the database.
+🔗 Once running, visit: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 📄 License
-Copyright © 2014 - 2026, The NorthEast Store Private Limited. All rights reserved.
+## 🏗️ Technology Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 16 (App Router & Turbopack) |
+| **Database** | Neon PostgreSQL (Production) / SQLite (Local) |
+| **ORM** | Prisma |
+| **Auth** | JWT with Edge Middleware Protection |
+| **Styling** | Vanilla CSS Modules + Glassmorphism Design |
+| **Icons** | Lucide React |
+
+---
+
+## 🔒 Security & Admin
+
+The store features a robust administrative layer protected by JWT and server-side middleware. To manage the store, users must be granted the `ADMIN` role.
+
+**Admin URL:** [https://northeast-store.vercel.app/admin](https://northeast-store.vercel.app/admin)
+
+---
+
+<div align="center">
+  <p>Copyright © 2014 - 2026, The NorthEast Store Private Limited.</p>
+</div>
