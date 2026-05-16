@@ -9,13 +9,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String
+  name       String?
+  role       String   @default("USER") // USER, ADMIN
+  lastActive DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  orders     Order[]
 }
 
 model Category {

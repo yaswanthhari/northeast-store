@@ -16,11 +16,15 @@ export async function proxy(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(session, JWT_SECRET);
-      // Valid token, allow request
+      const { payload } = await jwtVerify(session, JWT_SECRET);
+      
+      // Additional check for /admin routes
+      if (request.nextUrl.pathname.startsWith('/admin') && payload.role !== 'ADMIN') {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+      
       return NextResponse.next();
     } catch (error) {
-      // Invalid or expired token
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }

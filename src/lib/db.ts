@@ -27,6 +27,34 @@ export async function createUser(name: string, email: string, password: string) 
   });
 }
 
+export async function updateLastActive(userId: string) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { lastActive: new Date() },
+  });
+}
+
+export async function getAllUsers() {
+  return await prisma.user.findMany({
+    orderBy: { lastActive: 'desc' },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      lastActive: true,
+      createdAt: true,
+    },
+  });
+}
+
+export async function updateUserRole(userId: string, role: string) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { role },
+  });
+}
+
 // Compatibility Aliases for existing routes
 export const findMockUserByEmail = findUserByEmail;
 export const saveMockUser = async (user: any) => {

@@ -1,0 +1,132 @@
+.adminContainer {
+  min-height: 100vh;
+  padding: 120px 2rem 4rem;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  color: #2d3436;
+}
+
+.dashboardHeader {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboardHeader h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.statCard h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #636e72;
+  margin-bottom: 0.5rem;
+}
+
+.statCard .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3436;
+}
+
+.userTableContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.userTable th {
+  text-align: left;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  color: #636e72;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.userTable td {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.roleBadge {
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.roleAdmin {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.roleUser {
+  background: #e1f5fe;
+  color: #01579b;
+}
+
+.statusIndicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.online { background: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
+.offline { background: #bdc3c7; }
+
+.actionButton {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #dcdde1;
+  background: white;
+  color: #2f3640;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionButton:hover {
+  background: #f5f6fa;
+  border-color: #2f3640;
+}
+
+.promoteBtn { color: #d4af37; border-color: #d4af37; }
+.promoteBtn:hover { background: #fffcf0; }
+
+.demoteBtn { color: #e74c3c; border-color: #e74c3c; }
+.demoteBtn:hover { background: #fff5f5; }
