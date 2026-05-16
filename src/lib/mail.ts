@@ -146,3 +146,50 @@ Thank you for choosing The NorthEast Store! We've received your order...
   // If we get here, both ports failed
   console.error('[Email Service] ALL DELIVERY ATTEMPTS FAILED:', lastError);
 }
+
+export async function sendContactEmail(contactData: { name: string, email: string, message: string }) {
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+
+  if (!user || !pass) return;
+
+  const htmlContent = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+      <h2 style="color: #12402b;">New Message from Contact Form</h2>
+      <p><strong>Name:</strong> ${contactData.name}</p>
+      <p><strong>Email:</strong> ${contactData.email}</p>
+      <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+      <p><strong>Message:</strong></p>
+      <p style="white-space: pre-wrap;">${contactData.message}</p>
+    </div>
+  `;
+
+  const connectionOptions = [
+    { port: 465, secure: true },
+    { port: 587, secure: false },
+  ];
+
+  for (const option of connectionOptions) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host,
+        port: option.port,
+        secure: option.secure,
+        auth: { user, pass },
+        tls: { rejectUnauthorized: false }
+      });
+
+      await transporter.sendMail({
+        from: `"Contact Form" <${user}>`,
+        to: user, // Send to business email
+        replyTo: contactData.email,
+        subject: `[CONTACT FORM] Message from ${contactData.name}`,
+        html: htmlContent,
+      });
+      return;
+    } catch (err) {
+      continue;
+    }
+  }
+}
