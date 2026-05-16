@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import { findMockUserByEmail } from '@/lib/db';
 import { signToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
@@ -13,8 +14,8 @@ export async function POST(request: Request) {
 
     const user = await findMockUserByEmail(email);
     
-    // In a real app, use bcrypt.compare!
-    if (!user || user.password !== password) {
+    const isPasswordValid = await bcrypt.compare(password, user?.password || '');
+    if (!user || !isPasswordValid) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 

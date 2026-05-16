@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import { findMockUserByEmail, saveMockUser } from '@/lib/db';
 import { signToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
@@ -16,8 +17,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
     }
 
-    // In a real app, hash the password using bcrypt!
-    const newUser = { name, email, password };
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = { name, email, password: hashedPassword };
     const savedUser = await saveMockUser(newUser);
 
     const token = await signToken({ id: savedUser.id, email: savedUser.email, role: savedUser.role, name: savedUser.name });
