@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -13,10 +14,11 @@ async function main() {
   await prisma.recipe.deleteMany();
 
   console.log('Seeding users...');
+  const hashedPassword = await bcrypt.hash('password123', 10);
   const testUser = await prisma.user.create({
     data: {
       email: 'test@example.com',
-      password: 'password123',
+      password: hashedPassword,
       name: 'Test User',
     }
   });

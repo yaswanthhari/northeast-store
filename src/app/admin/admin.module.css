@@ -130,3 +130,27 @@
 
 .demoteBtn { color: #e74c3c; border-color: #e74c3c; }
 .demoteBtn:hover { background: #fff5f5; }
+
+.emailLogsSection {
+  max-width: 1200px;
+  margin: 3rem auto;
+}
+
+.logsContainer {
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.logsPre {
+  color: #dcdcdc;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

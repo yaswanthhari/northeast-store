@@ -110,9 +110,13 @@
 }
 
 .linkList a:hover {
-  opacity: 1;
-  color: #d4af37;
-  transform: translateX(8px);
+  color: var(--color-primary);
+  padding-left: 5px;
+}
+
+.adminFooterLink {
+  color: #d4af37 !important;
+  font-weight: 600;
 }
 
 .bottomBar {

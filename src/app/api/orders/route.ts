@@ -7,8 +7,6 @@ export async function POST(request: Request) {
   try {
     const session = await getSession();
     
-    // We'll allow both guest and logged-in checkout for now, 
-    // but if logged in, we link it to the user.
     const { items, total, shippingDetails } = await request.json();
 
     if (!items || items.length === 0) {
@@ -66,16 +64,30 @@ export async function POST(request: Request) {
     const order = await prisma.order.create({
       data: orderData,
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true
+          }
+        },
       },
     });
 
-    // Send email confirmation (simulated)
-    await sendOrderConfirmation(order, user.email);
-
+    // Send email confirmation
+    let emailSent = false;
+    const recipientEmail = shippingDetails.email || user.email;
+    
+    try {
+      console.log(`Sending order confirmation to: ${recipientEmail}`);
+      await sendOrderConfirmation(order, recipientEmail, user.name || '');
+      emailSent = true;
+    } catch (emailError) {
+      console.error('Failed to send email:', emailError);
+    }
+    
     return NextResponse.json({ 
       message: 'Order placed successfully', 
-      orderId: order.id 
+      orderId: order.id,
+      emailStatus: emailSent ? 'Sent' : 'Failed'
     }, { status: 201 });
 
   } catch (error: any) {

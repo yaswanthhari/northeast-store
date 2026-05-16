@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 import styles from '../login/login.module.css';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { checkSession } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,8 +28,8 @@ export default function RegisterPage() {
       });
 
       if (res.ok) {
+        await checkSession();
         router.push('/dashboard');
-        router.refresh();
       } else {
         const data = await res.json();
         setError(data.error || 'Failed to register');

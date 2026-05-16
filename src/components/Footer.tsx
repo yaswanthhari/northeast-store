@@ -58,8 +58,9 @@ export default function Footer() {
         <div className={styles.linksSection}>
           <h3 className={styles.heading}>My Account</h3>
           <ul className={styles.linkList}>
-            <li><Link href="/login">My Account</Link></li>
-            <li><Link href="/login">Order History</Link></li>
+            <li><Link href="/dashboard">My Profile</Link></li>
+            <li><Link href="/dashboard">Order History</Link></li>
+            <li><Link href="/admin" className={styles.adminFooterLink}>Admin Dashboard</Link></li>
           </ul>
         </div>
       </div>

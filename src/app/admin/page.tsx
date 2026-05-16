@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import styles from './admin.module.css';
 
 interface User {
@@ -13,9 +15,30 @@ interface User {
 }
 
 export default function AdminDashboard() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+  const [emailLogs, setEmailLogs] = useState('');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, online: 0 });
+
+  const fetchEmailLogs = async () => {
+    try {
+      const res = await fetch('/api/admin/email-logs');
+      if (res.ok) {
+        const data = await res.json();
+        setEmailLogs(data.logs);
+      }
+    } catch (error) {
+      console.error('Failed to fetch email logs:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isLoading && (!user || user.role !== 'ADMIN')) {
+      router.push('/dashboard');
+    }
+  }, [user, isLoading, router]);
 
   const fetchUsers = async () => {
     try {
@@ -37,7 +60,11 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchUsers();
-    const interval = setInterval(fetchUsers, 30000); // Refresh every 30s
+    fetchEmailLogs();
+    const interval = setInterval(() => {
+      fetchUsers();
+      fetchEmailLogs();
+    }, 30000); // Refresh every 30s
     return () => clearInterval(interval);
   }, []);
 
@@ -129,6 +156,18 @@ export default function AdminDashboard() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className={styles.emailLogsSection} style={{ marginTop: '3rem' }}>
+        <div className={styles.dashboardHeader}>
+          <h2>Outgoing Order Emails (Simulation)</h2>
+          <button onClick={fetchEmailLogs} className={styles.actionButton}>Refresh Logs</button>
+        </div>
+        <div className={styles.logsContainer}>
+          <pre className={styles.logsPre}>
+            {emailLogs || 'No order emails sent yet. Place an order to see logs here.'}
+          </pre>
+        </div>
       </div>
     </div>
   );

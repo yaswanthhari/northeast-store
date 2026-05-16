@@ -6,33 +6,16 @@ import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navbar.module.css';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userRole, setUserRole] = useState<string | null>(null);
   const { totalItems, setIsOpen } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const res = await fetch('/api/auth/session');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.authenticated) {
-            setUserRole(data.user.role);
-          }
-        }
-      } catch (e) {
-        console.error('Session check failed', e);
-      }
-    };
-    checkSession();
-  }, []);
 
 
 
@@ -64,7 +47,7 @@ export default function Navbar() {
           <Link href="/products" className={styles.navLink}>Food</Link>
           <Link href="/products?category=smoked-meats" className={styles.navLink}>Smoked Meats</Link>
           <Link href="/blog" className={styles.navLink}>Recipes</Link>
-          {userRole === 'ADMIN' && <Link href="/admin" className={`${styles.navLink} ${styles.adminLink}`}>Admin</Link>}
+          {user?.role === 'ADMIN' && <Link href="/admin" className={`${styles.navLink} ${styles.adminLink}`}>Admin</Link>}
         </nav>
 
         <div className={styles.iconActions}>
@@ -98,7 +81,7 @@ export default function Navbar() {
             <ShoppingCart size={20} />
             {totalItems > 0 && <span className={styles.cartBadge}>{totalItems}</span>}
           </button>
-          <Link href="/login" className={styles.iconBtn} aria-label="User Account">
+          <Link href={isAuthenticated ? "/dashboard" : "/login"} className={styles.iconBtn} aria-label="User Account">
             <User size={20} />
           </Link>
           
@@ -117,9 +100,22 @@ export default function Navbar() {
           <Link href="/products" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Food</Link>
           <Link href="/products?category=smoked-meats" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Smoked Meats</Link>
           <Link href="/blog" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Recipes</Link>
-          {userRole === 'ADMIN' && <Link href="/admin" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#d4af37', fontWeight: 700 }}>Admin Panel</Link>}
-          <Link href="/login" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Login / Register</Link>
-          <Link href="/api/auth/logout" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#e53e3e' }}>Log Out</Link>
+          {user?.role === 'ADMIN' && <Link href="/admin" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#d4af37', fontWeight: 700 }}>Admin Panel</Link>}
+          <Link href={isAuthenticated ? "/dashboard" : "/login"} className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>
+            {isAuthenticated ? 'My Account' : 'Login / Register'}
+          </Link>
+          {isAuthenticated && (
+            <button 
+              onClick={() => {
+                logout();
+                setIsMobileMenuOpen(false);
+              }} 
+              className={styles.mobileNavLink} 
+              style={{ color: '#e53e3e', background: 'none', border: 'none', width: '100%', textAlign: 'left', padding: '1rem' }}
+            >
+              Log Out
+            </button>
+          )}
         </nav>
       )}
     </header>
