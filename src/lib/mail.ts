@@ -118,10 +118,16 @@ Thank you for choosing The NorthEast Store! We've received your order...
       await transporter.sendMail({
         from: `"The NorthEast Store" <${user}>`,
         to: userEmail,
+        replyTo: user, // Helps with reputation
         bcc: user, 
         subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
         text: textContent,
         html: htmlContent,
+        headers: {
+          'X-Priority': '1 (Highest)',
+          'X-MSMail-Priority': 'High',
+          'Importance': 'high'
+        }
       });
 
       console.log(`[Email Service] SUCCESS! Email sent via Port ${option.port}.`);
