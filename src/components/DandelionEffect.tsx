@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 
 interface Seed {
   id: number;
-  x: number;
+  startX: number;
+  endX: number;
   delay: number;
   duration: number;
   size: number;
-  drift: number;
 }
 
 export default function DandelionEffect() {
