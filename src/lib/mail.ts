@@ -88,6 +88,12 @@ Thank you for choosing The NorthEast Store! We've received your order...
 
   try {
     // 1. Try to send real email if configured
+    console.log('[Email Diagnostic] Checking SMTP Variables:');
+    console.log(`- SMTP_USER: ${process.env.SMTP_USER ? 'PRESENT' : 'MISSING'}`);
+    console.log(`- SMTP_PASS: ${process.env.SMTP_PASS ? 'PRESENT' : 'MISSING'}`);
+    console.log(`- SMTP_HOST: ${process.env.SMTP_HOST ? 'PRESENT' : 'MISSING'}`);
+    console.log(`- SMTP_PORT: ${process.env.SMTP_PORT ? 'PRESENT' : 'MISSING'}`);
+
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       const from = `"The NorthEast Store" <${process.env.SMTP_USER}>`;
       
