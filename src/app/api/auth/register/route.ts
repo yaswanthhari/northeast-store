@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const newUser = { name, email, password };
     const savedUser = await saveMockUser(newUser);
 
-    const token = await signToken({ id: savedUser.id, email: savedUser.email, role: 'user', name: savedUser.name });
+    const token = await signToken({ id: savedUser.id, email: savedUser.email, role: savedUser.role, name: savedUser.name });
     
     const cookieStore = await cookies();
     cookieStore.set({

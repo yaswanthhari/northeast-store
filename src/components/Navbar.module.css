@@ -158,3 +158,19 @@
 .mobileNavLink:last-child {
   border-bottom: none;
 }
+
+.adminLink {
+  color: #d4af37 !important;
+  font-weight: 700;
+  border: 1px solid #d4af37;
+  padding: 0.3rem 0.8rem !important;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+}
+
+.adminLink:hover {
+  background: #d4af37;
+  color: white !important;
+}
+
