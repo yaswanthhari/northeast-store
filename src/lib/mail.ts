@@ -1,9 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-
 export async function sendOrderConfirmation(order: any, userEmail: string) {
-  const logPath = path.join(process.cwd(), 'order-emails.log');
-  
   const emailContent = `
 ==================================================
 ORDER CONFIRMATION - ${new Date().toLocaleString()}
@@ -36,8 +31,7 @@ The NorthEast Store Team
 \n`;
 
   // In a real app, you would use Nodemailer or Resend here.
-  // For now, we simulate by logging to a file.
-  fs.appendFileSync(logPath, emailContent);
-  
+  // For now, we simulate by logging to the console.
   console.log(`[Email Simulation] Order confirmation sent to ${userEmail}`);
+  console.log(emailContent);
 }
