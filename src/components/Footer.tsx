@@ -27,7 +27,7 @@ export default function Footer() {
             </div>
             <div className={styles.contactItem}>
               <Mail size={16} />
-              <span>support@northeaststore.in</span>
+              <span>northeaststore.in@gmail.com</span>
             </div>
             <div className={styles.contactItem}>
               <MapPin size={16} />
