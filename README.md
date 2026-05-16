@@ -84,8 +84,13 @@ The store features a robust administrative layer protected by JWT and server-sid
 
 **Admin URL:** [https://northeast-store.vercel.app/admin](https://northeast-store.vercel.app/admin)
 
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
 ---
 
 <div align="center">
   <p>Copyright © 2014 - 2026, The NorthEast Store Private Limited.</p>
 </div>
+
