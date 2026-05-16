@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import styles from './admin.module.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 interface User {
   id: string;
@@ -67,8 +65,6 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.adminContainer}>
-      <Navbar />
-      
       <div className={styles.dashboardHeader}>
         <h1>Collaboration Dashboard</h1>
         <button onClick={fetchUsers} className={styles.actionButton}>Refresh Data</button>
@@ -134,8 +130,6 @@ export default function AdminDashboard() {
           </tbody>
         </table>
       </div>
-
-      <Footer />
     </div>
   );
 }
