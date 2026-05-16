@@ -1,69 +1,77 @@
 # Northeast Store 🌿
 
-An online marketplace for authentic food products from the 8 states of Northeast India. Built with **Next.js 16**, **Prisma**, **PostgreSQL (Neon)**, and deployed on **Vercel**.
+An authentic marketplace for organic and traditional food products from the Eight States of Northeast India. 
 
-## 🛍️ Features
+**Live Demo:** [https://northeast-store.vercel.app](https://northeast-store.vercel.app)
 
-- 24+ authentic Northeast Indian products
-- Category filtering, price range filter, sorting
-- Shopping cart (localStorage persistent)
-- User auth (register/login)
-- Checkout & order flow
-- Blog/Recipe section
-- Responsive, glassmorphism design
+---
 
-## 🚀 Local Development (SQLite)
+## 🌟 Key Features
+
+### 🛒 Marketplace
+- **24+ Curated Products**: Authentic items sourced directly from local producers.
+- **Advanced Filtering**: Filter by category (Food, Smoked Meats, Spices), State (Assam, Manipur, Nagaland, etc.), and Price.
+- **Smart Search**: Find products instantly using the search bar.
+- **Persistent Cart**: Global shopping cart using React Context and LocalStorage.
+
+### 👑 Collaborative Admin Dashboard (`/admin`)
+- **Real-time User Tracking**: Monitor currently online team members and users.
+- **Role Management**: Promote users to **ADMIN** or demote them to **USER** with one click.
+- **Activity Monitoring**: Detailed "Last Active" timestamps for all registered users.
+- **Team Collaboration**: Secure access for multiple administrators to manage the store.
+
+### 📖 Recipe Blog
+- **Traditional Recipes**: Learn how to cook authentic Northeastern dishes like Black Sesame Potato Curry and Naga Style Pork.
+- **Interactive Guides**: Detailed step-by-step instructions for regional staples.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Turbopack)
+- **Database**: [Neon PostgreSQL](https://neon.tech/) (Serverless Cloud Database)
+- **ORM**: [Prisma](https://www.prisma.io/)
+- **Authentication**: JWT-based secure sessions with Middleware protection.
+- **Styling**: Premium Glassmorphism UI with Vanilla CSS Modules.
+- **Deployment**: [Vercel](https://vercel.com/)
+
+---
+
+## 🚀 Quick Start (Local Development)
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/northeast-store.git
+# 1. Clone the repository
+git clone https://github.com/yaswanthhari/northeast-store.git
 cd northeast-store
 
 # 2. Install dependencies
 npm install
 
-# 3. Set up local env (SQLite)
+# 3. Environment Setup
+# Create a .env file with your DATABASE_URL (SQLite or PostgreSQL)
 echo 'DATABASE_URL="file:./dev.db"' > .env
 
-# 4. Generate Prisma client
+# 4. Initialize Database
 npx prisma generate
-
-# 5. Push schema to local db
 npx prisma db push
-
-# 6. Seed the database
 npx prisma db seed
 
-# 7. Run dev server
+# 5. Run Development Server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Visit `http://localhost:3000` to see the site.
 
-**Test account:** `test@example.com` / `password123`
+---
 
-## ☁️ Production Setup (Neon PostgreSQL)
+## 📋 Administrative Access
 
-1. Create a free database at [neon.tech](https://neon.tech)
-2. Copy the connection strings from Neon dashboard
-3. Add to your `.env` (or Vercel environment variables):
+To access the **Admin Dashboard**:
+1. Log in to the application.
+2. Navigate to [https://northeast-store.vercel.app/admin](https://northeast-store.vercel.app/admin).
+3. Ensure your account has the `ADMIN` role in the database.
 
-```
-DATABASE_URL="postgresql://..."
-DIRECT_URL="postgresql://..."
-```
+---
 
-4. Run migrations: `npx prisma migrate deploy`
-5. Seed the database: `npx prisma db seed`
-
-## 🧱 Tech Stack
-
-| Layer | Tech |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| Database (local) | SQLite via Prisma |
-| Database (prod) | Neon PostgreSQL |
-| Styling | Vanilla CSS Modules |
-| Animations | Framer Motion |
-| Icons | Lucide React |
-| ORM | Prisma |
+## 📄 License
+Copyright © 2014 - 2026, The NorthEast Store Private Limited. All rights reserved.
