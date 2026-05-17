@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [emailLogs, setEmailLogs] = useState('');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, online: 0 });
+  const [smtpStatus, setSmtpStatus] = useState<any>(null);
 
   const fetchEmailLogs = async () => {
     try {
@@ -31,6 +32,18 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Failed to fetch email logs:', error);
+    }
+  };
+
+  const fetchSmtpStatus = async () => {
+    try {
+      const res = await fetch('/api/admin/smtp-check');
+      if (res.ok) {
+        const data = await res.json();
+        setSmtpStatus(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch SMTP status:', error);
     }
   };
 
@@ -61,9 +74,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchUsers();
     fetchEmailLogs();
+    fetchSmtpStatus();
     const interval = setInterval(() => {
       fetchUsers();
       fetchEmailLogs();
+      fetchSmtpStatus();
     }, 30000); // Refresh every 30s
     return () => clearInterval(interval);
   }, []);
@@ -156,6 +171,71 @@ export default function AdminDashboard() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className={styles.emailLogsSection} style={{ marginTop: '3rem' }}>
+        <div className={styles.dashboardHeader}>
+          <h2>SMTP Environment Variables Diagnostics</h2>
+          <button onClick={fetchSmtpStatus} className={styles.actionButton}>Refresh Status</button>
+        </div>
+        <div className={styles.userTableContainer} style={{ padding: '1.5rem' }}>
+          {smtpStatus ? (
+            <div>
+              <p style={{ marginBottom: '1.5rem', color: '#636e72', fontSize: '0.95rem' }}>
+                Below is the real-time configuration of SMTP environment variables on the server. 
+                If any say <strong style={{ color: '#e74c3c' }}>MISSING</strong>, they must be added to your Vercel Project Settings for <strong>Production</strong>.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                {Object.entries(smtpStatus.variables || {}).map(([key, val]: any) => {
+                  const isMissing = val.includes('MISSING') || val.includes('EMPTY');
+                  return (
+                    <div key={key} style={{
+                      background: 'rgba(255, 255, 255, 0.5)',
+                      padding: '1.25rem',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(0,0,0,0.05)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.01)'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <span style={{ fontWeight: 700, fontFamily: 'monospace', fontSize: '0.95rem' }}>{key}</span>
+                        <span style={{
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '50px',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          background: isMissing ? '#fde8e8' : '#e1fbf1',
+                          color: isMissing ? '#9b1c1c' : '#03543f'
+                        }}>
+                          {isMissing ? 'Missing' : 'Loaded'}
+                        </span>
+                      </div>
+                      <span style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.85rem',
+                        color: isMissing ? '#e74c3c' : '#2f3640',
+                        wordBreak: 'break-all'
+                      }}>{val}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{
+                marginTop: '1.5rem',
+                padding: '1rem',
+                borderRadius: '8px',
+                background: '#fff8db',
+                border: '1px solid #ffe0b2',
+                color: '#856404',
+                fontSize: '0.9rem'
+              }}>
+                <strong>⚠️ Vercel Production Note:</strong> Please make sure that under Vercel Settings &rarr; Environment Variables, these SMTP variables are enabled for <strong>Production</strong> (not just Preview/Development). If you checked them, trigger a <strong>Redeploy</strong> in Vercel to activate them.
+              </div>
+            </div>
+          ) : (
+            <p style={{ textAlign: 'center', color: '#636e72' }}>Loading SMTP Diagnostics...</p>
+          )}
+        </div>
       </div>
 
       <div className={styles.emailLogsSection} style={{ marginTop: '3rem' }}>

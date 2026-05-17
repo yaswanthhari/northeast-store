@@ -74,11 +74,12 @@ export async function POST(request: Request) {
 
     // Send email confirmation
     let emailSent = false;
-    const recipientEmail = shippingDetails.email || user.email;
+    const recipientEmail = user.email;
+    const recipientName = user.name || 'Valued Customer';
     
     try {
-      console.log(`Sending order confirmation to: ${recipientEmail}`);
-      await sendOrderConfirmation(order, recipientEmail, user.name || '');
+      console.log(`Sending order confirmation to registered user: ${recipientEmail} (${recipientName})`);
+      await sendOrderConfirmation(order, recipientEmail, recipientName);
       emailSent = true;
     } catch (emailError) {
       console.error('Failed to send email:', emailError);
