@@ -53,12 +53,22 @@ export default function AdminDashboard() {
     }
   }, [user, isLoading, router]);
 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const fetchUsers = async () => {
     try {
       const res = await fetch('/api/admin/users');
-      if (!res.ok) throw new Error('Failed to fetch');
+      if (!res.ok) {
+        if (res.status === 401) {
+          setErrorMsg('Unauthorized: You must be logged in as an ADMIN to access this dashboard.');
+        } else {
+          setErrorMsg('Failed to load user list from server.');
+        }
+        return;
+      }
       const data = await res.json();
       setUsers(data);
+      setErrorMsg(null);
       
       // Calculate stats
       const fifteenMinsAgo = new Date(Date.now() - 15 * 60 * 1000);
@@ -111,6 +121,48 @@ export default function AdminDashboard() {
         <h1>Collaboration Dashboard</h1>
         <button onClick={fetchUsers} className={styles.actionButton}>Refresh Data</button>
       </div>
+
+      {errorMsg && (
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto 2rem',
+          padding: '1.5rem',
+          borderRadius: '16px',
+          background: 'rgba(231, 76, 60, 0.1)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(231, 76, 60, 0.2)',
+          color: '#c0392b',
+          fontWeight: 500,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 8px 32px rgba(231, 76, 60, 0.05)'
+        }}>
+          <span>{errorMsg}</span>
+          <button 
+            onClick={fetchUsers} 
+            style={{
+              padding: '0.4rem 1rem',
+              borderRadius: '8px',
+              border: '1px solid #c0392b',
+              background: 'transparent',
+              color: '#c0392b',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.background = 'rgba(231, 76, 60, 0.1)';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.background = 'transparent';
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
