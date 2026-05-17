@@ -2,6 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
 
+// Helper to extract a valid email address from a string (e.g. "Name <email@domain.com>" -> "email@domain.com")
+const getValidEmail = (input: string | undefined, fallback: string): string => {
+  if (!input) return fallback;
+  const match = input.match(/<([^>]+)>/);
+  if (match && match[1]) return match[1].trim();
+  const trimmed = input.trim();
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return trimmed;
+  return fallback;
+};
+
 export async function sendOrderConfirmation(order: any, userEmail: string, userName: string) {
   const name = userName || 'Valued Customer';
 
@@ -123,16 +133,23 @@ Thank you for choosing The NorthEast Store! We've received your order...
   const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
   const user = process.env.SMTP_USER?.trim();
   const pass = process.env.SMTP_PASS?.trim();
+  const fromHeader = process.env.SMTP_FROM || `"The NorthEast Store" <${user}>`;
 
   if (!user || !pass) {
     console.error('[Email Service] CRITICAL ERROR: SMTP_USER or SMTP_PASS is missing in environment variables!');
     return;
   }
 
+  // Derive safe, valid email addresses for headers
+  const defaultBusinessEmail = 'northeaststore.in@gmail.com';
+  const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
+  const replyToEmail = verifiedSenderEmail;
+  const bccEmail = verifiedSenderEmail;
+
   // Define the two ways to connect
   const connectionOptions = [
-    { port: 465, secure: true },  // SSL (What we tried)
-    { port: 587, secure: false }, // TLS (More compatible with Vercel)
+    { port: 465, secure: true },  // SSL
+    { port: 587, secure: false }, // TLS
   ];
 
   let lastError = null;
@@ -149,10 +166,10 @@ Thank you for choosing The NorthEast Store! We've received your order...
       });
 
       await transporter.sendMail({
-        from: `"The NorthEast Store" <${user}>`,
+        from: fromHeader,
         to: userEmail,
-        replyTo: user, // Helps with reputation
-        bcc: user, 
+        replyTo: replyToEmail,
+        bcc: bccEmail, 
         subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
         text: textContent,
         html: htmlContent,
@@ -184,8 +201,13 @@ export async function sendContactEmail(contactData: { name: string, email: strin
   const user = process.env.SMTP_USER?.trim();
   const pass = process.env.SMTP_PASS?.trim();
   const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+  const fromHeader = process.env.SMTP_FROM || `"Contact Form" <${user}>`;
 
   if (!user || !pass) return;
+
+  const defaultBusinessEmail = 'northeaststore.in@gmail.com';
+  const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
+  const businessRecipient = verifiedSenderEmail;
 
   const htmlContent = `
     <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
@@ -214,8 +236,8 @@ export async function sendContactEmail(contactData: { name: string, email: strin
       });
 
       await transporter.sendMail({
-        from: `"Contact Form" <${user}>`,
-        to: user, // Send to business email
+        from: fromHeader,
+        to: businessRecipient,
         replyTo: contactData.email,
         subject: `[CONTACT FORM] Message from ${contactData.name}`,
         html: htmlContent,
@@ -226,3 +248,4 @@ export async function sendContactEmail(contactData: { name: string, email: strin
     }
   }
 }
+
