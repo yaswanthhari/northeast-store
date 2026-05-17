@@ -22,6 +22,14 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  async redirects() {
+    return [
+      {
+        source: '/auth/forgot-password',
+        destination: '/forgot-password',
+        permanent: true,
+      },
+    ];
   },
 };
 
