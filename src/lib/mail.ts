@@ -19,54 +19,87 @@ export async function sendOrderConfirmation(order: any, userEmail: string, userN
     }
   });
   
-  // HTML version for real inboxes
+  // HTML version for real inboxes (Designed to look professional and premium)
+  const baseUrl = 'https://northeast-store.vercel.app';
   const htmlContent = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
-      <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #1a1a1a; margin-bottom: 0;">THE NORTHEAST STORE</h1>
-        <p style="color: #636e72; margin-top: 5px;">Authentic Foods of the Eight States</p>
-      </div>
-      <hr style="border: 0; border-top: 1px solid #eee;" />
-      <p>Hi <strong>${name}</strong>,</p>
-      <p>Thank you for choosing The NorthEast Store! We've received your order and our team is already working on getting your treasures from the Eight States ready for shipment.</p>
-      
-      <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-        <h3 style="margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Order Summary</h3>
-        <p><strong>Order ID:</strong> ${order.id}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Total Amount:</strong> ₹${order.total.toFixed(2)}</p>
+    <div style="font-family: 'Outfit', 'Inter', sans-serif; max-width: 600px; margin: auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+      <!-- Gold & Green Premium Header -->
+      <div style="background: linear-gradient(135deg, #12402b 0%, #0d281b 100%); padding: 30px 20px; text-align: center; border-bottom: 4px solid #d4af37;">
+        <h1 style="color: #d4af37; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">The NorthEast Store</h1>
+        <p style="color: #a0aec0; margin: 5px 0 0 0; font-size: 14px; letter-spacing: 0.5px;">Authentic Treasures from the Eight States</p>
       </div>
 
-      <h3>Items Ordered</h3>
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="text-align: left; border-bottom: 2px solid #eee;">
-            <th style="padding: 10px 0;">Product</th>
-            <th style="padding: 10px 0;">Qty</th>
-            <th style="padding: 10px 0; text-align: right;">Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${order.items.map((item: any) => `
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 10px 0;">${item.product.name}</td>
-              <td style="padding: 10px 0;">${item.quantity}</td>
-              <td style="padding: 10px 0; text-align: right;">₹${item.price.toFixed(2)}</td>
+      <div style="padding: 30px 25px;">
+        <h2 style="color: #2d3748; margin-top: 0; font-size: 20px;">Hi ${name},</h2>
+        <p style="color: #4a5568; line-height: 1.6; font-size: 15px;">
+          Thank you for your purchase! We've received your order and our culinary team is already gathering your authentic items from the Northeast for shipment.
+        </p>
+
+        <!-- Order Summary Card -->
+        <div style="background: #f7fafc; border: 1px solid #edf2f7; border-radius: 12px; padding: 20px; margin: 25px 0;">
+          <h3 style="color: #12402b; margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Order Details</h3>
+          <table style="width: 100%; font-size: 14px; color: #4a5568;">
+            <tr>
+              <td style="padding: 5px 0;"><strong>Order ID:</strong></td>
+              <td style="padding: 5px 0; text-align: right; font-family: monospace;">${order.id}</td>
             </tr>
-          `).join('')}
-        </tbody>
-      </table>
+            <tr>
+              <td style="padding: 5px 0;"><strong>Status:</strong></td>
+              <td style="padding: 5px 0; text-align: right;"><span style="background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 50px; font-size: 12px; font-weight: 700;">${order.status}</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0;"><strong>Total Amount:</strong></td>
+              <td style="padding: 5px 0; text-align: right; color: #12402b; font-weight: 700; font-size: 16px;">₹${order.total.toFixed(2)}</td>
+            </tr>
+          </table>
+        </div>
 
-      <div style="margin-top: 20px;">
-        <strong>Shipping To:</strong><br />
-        ${order.shippingAddress}<br />
-        ${order.city} - ${order.postalCode}
+        <!-- Premium Products Table with Images -->
+        <h3 style="color: #2d3748; font-size: 16px; margin-bottom: 15px;">Items Ordered</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+          <thead>
+            <tr style="border-bottom: 2px solid #edf2f7; text-align: left; font-size: 13px; color: #718096; text-transform: uppercase;">
+              <th style="padding: 10px 0;">Product</th>
+              <th style="padding: 10px 0; text-align: center;">Qty</th>
+              <th style="padding: 10px 0; text-align: right;">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${order.items.map((item: any) => {
+              // Convert local path to absolute URL
+              const imgUrl = item.product.image.startsWith('http') ? item.product.image : `${baseUrl}${item.product.image}`;
+              return `
+                <tr style="border-bottom: 1px solid #edf2f7;">
+                  <td style="padding: 15px 0; display: flex; align-items: center;">
+                    <img src="${imgUrl}" alt="${item.product.name}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px; margin-right: 12px; border: 1px solid #edf2f7;" />
+                    <div>
+                      <span style="font-weight: 600; color: #2d3748; font-size: 14px; display: block;">${item.product.name}</span>
+                      <span style="font-size: 12px; color: #718096;">State: ${item.product.state}</span>
+                    </div>
+                  </td>
+                  <td style="padding: 15px 0; text-align: center; color: #4a5568; font-weight: 600; font-size: 14px;">${item.quantity}</td>
+                  <td style="padding: 15px 0; text-align: right; color: #2d3748; font-weight: 600; font-size: 14px;">₹${item.price.toFixed(2)}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+
+        <!-- Shipping Destination Card -->
+        <div style="border-left: 4px solid #d4af37; background: #fafafa; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 30px;">
+          <strong style="color: #2d3748; font-size: 14px; display: block; margin-bottom: 5px;">Shipping Destination</strong>
+          <span style="color: #4a5568; font-size: 14px; line-height: 1.5;">
+            ${order.shippingAddress}, ${order.city} - ${order.postalCode}
+          </span>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #edf2f7; margin-bottom: 25px;" />
+
+        <div style="text-align: center; color: #718096; font-size: 13px; line-height: 1.6;">
+          <p style="margin: 0 0 5px 0; font-weight: 700; color: #12402b;">Stay Spicy,</p>
+          <p style="margin: 0; font-weight: 800; color: #2d3748; font-size: 14px;">The NorthEast Store Team</p>
+        </div>
       </div>
-
-      <p style="margin-top: 30px; font-size: 0.9rem; color: #636e72;">
-        Stay Spicy,<br />
-        <strong>The NorthEast Store Team</strong>
-      </p>
     </div>
   `;
 
