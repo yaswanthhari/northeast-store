@@ -98,3 +98,23 @@
 .link:hover {
   text-decoration: underline;
 }
+
+.forgotContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.25rem;
+}
+
+.forgotLink {
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+

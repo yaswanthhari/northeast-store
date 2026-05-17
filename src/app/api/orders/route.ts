@@ -96,3 +96,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const session = await getSession();
+    if (!session || !session.id) {
+      return NextResponse.json({ error: 'Please login to view your orders' }, { status: 401 });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: session.id as string,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return NextResponse.json({ orders }, { status: 200 });
+  } catch (error: any) {
+    console.error('Failed to fetch orders:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  }
+}
+

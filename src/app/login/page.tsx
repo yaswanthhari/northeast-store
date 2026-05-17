@@ -75,6 +75,11 @@ export default function LoginPage() {
               className={styles.input}
               placeholder="••••••••"
             />
+            <div className={styles.forgotContainer}>
+              <Link href="/forgot-password" className={styles.forgotLink}>
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           <button 
