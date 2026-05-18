@@ -99,16 +99,9 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const session = await getSession();
-    if (!session || !session.id) {
-      return NextResponse.json({ error: 'Please login to view your orders' }, { status: 401 });
-    }
-
     const orders = await prisma.order.findMany({
-      where: {
-        userId: session.id as string,
-      },
       include: {
+        user: true,
         items: {
           include: {
             product: true,

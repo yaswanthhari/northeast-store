@@ -47,6 +47,10 @@ interface Order {
   postalCode: string;
   createdAt: string;
   items: OrderItem[];
+  user?: {
+    name: string;
+    email: string;
+  };
 }
 
 export default function OrdersPage() {
@@ -84,16 +88,8 @@ export default function OrdersPage() {
   const [openInvoiceMenu, setOpenInvoiceMenu] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login?redirect=/orders');
-    }
-  }, [isAuthenticated, authLoading, router]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchOrders();
-    }
-  }, [isAuthenticated]);
+    fetchOrders();
+  }, []);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -244,7 +240,7 @@ export default function OrdersPage() {
     );
   }
 
-  if (!user) return null;
+  // Show orders even for guests
 
   return (
     <div className={styles.page}>
@@ -422,7 +418,7 @@ export default function OrdersPage() {
                           className={styles.shipToButton}
                           onClick={() => setOpenShipTo(openShipTo === order.id ? null : order.id)}
                         >
-                          <span className={styles.shipToName}>{user.name}</span>
+                          <span className={styles.shipToName}>{order.user?.name || user?.name || 'Valued Customer'}</span>
                           <ChevronDown size={12} />
                         </button>
                         
@@ -430,7 +426,7 @@ export default function OrdersPage() {
                         {openShipTo === order.id && (
                           <div className={styles.shipToDropdown}>
                             <div className={styles.shipToArrow}></div>
-                            <h4 className={styles.shipToUser}>{user.name}</h4>
+                            <h4 className={styles.shipToUser}>{order.user?.name || user?.name || 'Valued Customer'}</h4>
                             <p className={styles.shipToAddress}>{order.shippingAddress}</p>
                             <p className={styles.shipToCity}>{order.city}, {order.postalCode}</p>
                             <p className={styles.shipToCountry}>India</p>
@@ -878,7 +874,7 @@ export default function OrdersPage() {
 
                   <div className={styles.partyCol}>
                     <h5>Shipping Address:</h5>
-                    <p><strong>{user.name}</strong></p>
+                    <p><strong>{activeInvoice.user?.name || user?.name || 'Valued Customer'}</strong></p>
                     <p>{activeInvoice.shippingAddress}</p>
                     <p>{activeInvoice.city}, {activeInvoice.postalCode}</p>
                     <p>India</p>
