@@ -22,6 +22,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
   async redirects() {
     return [
       {
