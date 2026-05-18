@@ -47,10 +47,10 @@ export default function Navbar() {
           <Link href="/products" className={styles.navLink}>Food</Link>
           <Link href="/products?category=smoked-meats" className={styles.navLink}>Smoked Meats</Link>
           <Link href="/blog" className={styles.navLink}>Recipes</Link>
-          {isAuthenticated && <Link href="/orders" className={styles.navLink}>Orders</Link>}
+          <Link href="/orders" className={styles.navLink}>Orders</Link>
           {user?.role === 'ADMIN' && <Link href="/admin" className={`${styles.navLink} ${styles.adminLink}`}>Admin</Link>}
         </nav>
-
+        
         <div className={styles.iconActions}>
           <div className={`${styles.searchWrapper} ${isSearchOpen ? styles.searchActive : ''}`}>
             {isSearchOpen && (
@@ -101,15 +101,11 @@ export default function Navbar() {
           <Link href="/products" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Food</Link>
           <Link href="/products?category=smoked-meats" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Smoked Meats</Link>
           <Link href="/blog" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Recipes</Link>
+          <Link href="/orders" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>Orders</Link>
           {user?.role === 'ADMIN' && <Link href="/admin" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#d4af37', fontWeight: 700 }}>Admin Panel</Link>}
           <Link href={isAuthenticated ? "/dashboard" : "/login"} className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>
             {isAuthenticated ? 'My Account' : 'Login / Register'}
           </Link>
-          {isAuthenticated && (
-            <Link href="/orders" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>
-              Your Orders
-            </Link>
-          )}
           {isAuthenticated && (
             <button 
               onClick={() => {
