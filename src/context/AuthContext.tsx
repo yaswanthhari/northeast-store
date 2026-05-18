@@ -59,11 +59,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
       setUser(null);
       localStorage.removeItem('nest_user');
       window.location.href = '/';
-    } catch (error) {
-      console.error('Logout failed:', error);
     }
   };
 
