@@ -102,9 +102,14 @@ export default function CheckoutPage() {
         <p className={styles.successText}>
           Thank you for your purchase. We are preparing your treasures from the Northeast. You will receive an email confirmation shortly.
         </p>
-        <Link href="/products" className={styles.returnBtn}>
-          Return to Shop
-        </Link>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link href="/orders" className={styles.returnBtn} style={{ backgroundColor: '#d4af37', borderColor: '#d4af37' }}>
+            Track Order & History
+          </Link>
+          <Link href="/products" className={styles.returnBtn} style={{ backgroundColor: '#12402b', borderColor: '#12402b' }}>
+            Continue Shopping
+          </Link>
+        </div>
       </div>
     );
   }

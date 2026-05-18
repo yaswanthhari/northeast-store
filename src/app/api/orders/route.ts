@@ -3,6 +3,9 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { sendOrderConfirmation } from '@/lib/mail';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();

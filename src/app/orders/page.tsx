@@ -95,7 +95,7 @@ export default function OrdersPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch('/api/orders', { cache: 'no-store' });
       if (!res.ok) {
         throw new Error('Failed to fetch orders');
       }

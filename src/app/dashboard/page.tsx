@@ -21,7 +21,7 @@ export default function DashboardPage() {
     if (user) {
       async function fetchRecentOrders() {
         try {
-          const res = await fetch('/api/orders');
+          const res = await fetch('/api/orders', { cache: 'no-store' });
           if (res.ok) {
             const data = await res.json();
             setRecentOrders(data.orders?.slice(0, 3) || []);
