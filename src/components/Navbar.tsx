@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Search, ClipboardList } from 'lucide-react';
 import { useState } from 'react';
 import styles from './Navbar.module.css';
 import { useCart } from '@/context/CartContext';
@@ -73,6 +73,17 @@ export default function Navbar() {
               {isSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
           </div>
+
+          <Link 
+            href="/orders" 
+            className={styles.iconBtn} 
+            aria-label="My Orders" 
+            title="My Orders"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+          >
+            <ClipboardList size={20} />
+            <span className={styles.ordersText} style={{ fontSize: '0.8rem', fontWeight: 600, display: 'none' }}>Orders</span>
+          </Link>
 
           <button 
             className={styles.iconBtn} 
