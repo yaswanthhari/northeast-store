@@ -218,7 +218,7 @@ async function main() {
       name: 'Purple Tea',
       price: 300.00,
       state: 'Arunachal Pradesh',
-      image: '/cardamom.png',
+      image: '/purple_tea.png',
       description: 'Rare and antioxidant-rich tea from Arunachal.',
       categoryId: findCat('beverages'),
     },
