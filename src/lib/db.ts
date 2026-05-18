@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 // Auth Helpers
 export async function findUserByEmail(email: string) {
   return await prisma.user.findUnique({
-    where: { email },
+    where: { email: email.trim().toLowerCase() },
   });
 }
 
@@ -21,7 +21,7 @@ export async function createUser(name: string, email: string, password: string) 
   return await prisma.user.create({
     data: {
       name,
-      email,
+      email: email.trim().toLowerCase(),
       password, // Note: In production, always hash passwords!
     },
   });

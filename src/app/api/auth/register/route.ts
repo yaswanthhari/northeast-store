@@ -12,13 +12,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const existingUser = await findMockUserByEmail(email);
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingUser = await findMockUserByEmail(normalizedEmail);
     if (existingUser) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { name, email, password: hashedPassword };
+    const newUser = { name, email: normalizedEmail, password: hashedPassword };
     const savedUser = await saveMockUser(newUser);
 
     const token = await signToken({ id: savedUser.id, email: savedUser.email, role: savedUser.role, name: savedUser.name });

@@ -10,9 +10,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing email or new password' }, { status: 400 });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
     // Verify user exists in the database
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { email: normalizedEmail }
     });
 
     if (!user) {
