@@ -129,6 +129,7 @@ export async function POST(request: Request) {
 
 // ✅ Fix — add session check at the top of GET()
 export async function GET(request: Request) {
+  // Trigger fresh Vercel production rebuild with synchronized database schema
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
