@@ -41,7 +41,7 @@ interface Order {
   id: string;
   userId: string;
   total: number;
-  status: string; // PENDING, COMPLETED, CANCELLED
+  status: string;
   shippingAddress: string;
   city: string;
   postalCode: string;
@@ -63,13 +63,13 @@ export default function OrdersPage() {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Controls
   const [activeTab, setActiveTab] = useState<'orders' | 'buy_again' | 'not_shipped'>('orders');
   const [searchQuery, setSearchQuery] = useState('');
   const [appliedSearch, setAppliedSearch] = useState('');
   const [timeFilter, setTimeFilter] = useState('3_months');
-  
+
   // Modals
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
   const [feedbackType, setFeedbackType] = useState<'seller' | 'delivery' | null>(null);
@@ -87,9 +87,19 @@ export default function OrdersPage() {
   const [openShipTo, setOpenShipTo] = useState<string | null>(null);
   const [openInvoiceMenu, setOpenInvoiceMenu] = useState<string | null>(null);
 
+  // ✅ Fix: redirect unauthenticated users to login
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login?redirect=/orders');
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  // ✅ Fix: only fetch orders when user is confirmed logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchOrders();
+    }
+  }, [isAuthenticated]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -119,15 +129,10 @@ export default function OrdersPage() {
       const diffTime = Math.abs(now.getTime() - orderDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      if (timeFilter === '3_months') {
-        return diffDays <= 90;
-      } else if (timeFilter === '6_months') {
-        return diffDays <= 180;
-      } else if (timeFilter === '2026') {
-        return orderDate.getFullYear() === 2026;
-      } else if (timeFilter === '2025') {
-        return orderDate.getFullYear() === 2025;
-      }
+      if (timeFilter === '3_months') return diffDays <= 90;
+      if (timeFilter === '6_months') return diffDays <= 180;
+      if (timeFilter === '2026') return orderDate.getFullYear() === 2026;
+      if (timeFilter === '2025') return orderDate.getFullYear() === 2025;
       return true; // all_time
     });
 
@@ -136,12 +141,12 @@ export default function OrdersPage() {
       result = result.filter(order => order.status === 'PENDING');
     }
 
-    // 3. Search filtering (Product name or Order ID)
+    // 3. Search filtering
     if (appliedSearch.trim()) {
       const query = appliedSearch.toLowerCase().trim();
       result = result.filter(order => {
         const matchesId = order.id.toLowerCase().includes(query);
-        const matchesProduct = order.items.some(item => 
+        const matchesProduct = order.items.some(item =>
           item.product?.name?.toLowerCase().includes(query)
         );
         return matchesId || matchesProduct;
@@ -151,29 +156,25 @@ export default function OrdersPage() {
     setFilteredOrders(result);
   }, [orders, activeTab, appliedSearch, timeFilter]);
 
-  // Handle Search Submission
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setAppliedSearch(searchQuery);
   };
 
-  // Clear Search
   const clearSearch = () => {
     setSearchQuery('');
     setAppliedSearch('');
   };
 
-  // Re-order Action (Buy It Again)
   const handleBuyItAgain = (product: OrderItem['product']) => {
     addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image
+      image: product.image,
     });
   };
 
-  // Get unique list of past ordered products for "Buy Again" tab
   const getUniqueOrderedProducts = () => {
     const productsMap = new Map<string, OrderItem['product']>();
     orders.forEach(order => {
@@ -186,30 +187,27 @@ export default function OrdersPage() {
     return Array.from(productsMap.values());
   };
 
-  // Date formatter
   const formatDate = (dateStr: string) => {
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
     return new Date(dateStr).toLocaleDateString('en-IN', options);
   };
 
-  // Calculate return window closing date (30 days from order date)
   const getReturnWindowDate = (dateStr: string) => {
     const date = new Date(dateStr);
     date.setDate(date.getDate() + 30);
     return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
-  // Check if return window is active
   const isReturnWindowActive = (dateStr: string) => {
     const date = new Date(dateStr);
     date.setDate(date.getDate() + 30);
     return new Date() < date;
   };
 
-  // Handle feedback modal submission
+  // ✅ Fix: honest feedback message — feature coming soon
   const handleFeedbackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setModalSuccess('Thank you! Your feedback has been received successfully.');
+    setModalSuccess('Thank you! Feedback feature coming soon.');
     setTimeout(() => {
       setFeedbackType(null);
       setFeedbackOrder(null);
@@ -219,10 +217,9 @@ export default function OrdersPage() {
     }, 2000);
   };
 
-  // Handle product review submission
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setModalSuccess('Thank you! Your product review has been submitted for moderation.');
+    setModalSuccess('Thank you! Review feature coming soon.');
     setTimeout(() => {
       setReviewProduct(null);
       setComments('');
@@ -231,6 +228,7 @@ export default function OrdersPage() {
     }, 2000);
   };
 
+  // Show loading while checking auth or fetching orders
   if (authLoading || (loading && orders.length === 0)) {
     return (
       <div className={styles.loadingState}>
@@ -240,12 +238,13 @@ export default function OrdersPage() {
     );
   }
 
-  // Show orders even for guests
+  // Don't render page content for unauthenticated users (redirect is in progress)
+  if (!isAuthenticated) return null;
 
   return (
     <div className={styles.page}>
       <div className="container">
-        
+
         {/* Breadcrumb */}
         <div className={styles.breadcrumb}>
           <Link href="/dashboard">Your Account</Link>
@@ -256,14 +255,14 @@ export default function OrdersPage() {
         {/* Header Block */}
         <header className={styles.header}>
           <h1 className={styles.title}>Your Orders</h1>
-          
+
           {/* Search Form */}
           <form onSubmit={handleSearchSubmit} className={styles.searchBar}>
             <div className={styles.searchInputContainer}>
               <Search className={styles.searchIcon} size={18} />
-              <input 
-                type="text" 
-                placeholder="Search all orders" 
+              <input
+                type="text"
+                placeholder="Search all orders"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={styles.searchInput}
@@ -281,19 +280,19 @@ export default function OrdersPage() {
         {/* Tab system */}
         <div className={styles.tabsContainer}>
           <div className={styles.tabs}>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'orders' ? styles.activeTab : ''}`}
               onClick={() => { setActiveTab('orders'); clearSearch(); }}
             >
               Orders
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'buy_again' ? styles.activeTab : ''}`}
               onClick={() => { setActiveTab('buy_again'); clearSearch(); }}
             >
               Buy Again
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === 'not_shipped' ? styles.activeTab : ''}`}
               onClick={() => { setActiveTab('not_shipped'); clearSearch(); }}
             >
@@ -302,7 +301,7 @@ export default function OrdersPage() {
           </div>
         </div>
 
-        {/* Time period filter info */}
+        {/* Time period filter */}
         {activeTab !== 'buy_again' && (
           <div className={styles.filterBar}>
             <div className={styles.filterLabel}>
@@ -310,8 +309,8 @@ export default function OrdersPage() {
                 {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''} placed in
               </span>
               <div className={styles.dropdownSelectWrapper}>
-                <select 
-                  value={timeFilter} 
+                <select
+                  value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value)}
                   className={styles.timeDropdown}
                 >
@@ -338,7 +337,6 @@ export default function OrdersPage() {
 
         {/* Content Display */}
         {activeTab === 'buy_again' ? (
-          /* Buy Again Tab Content */
           <div className={styles.buyAgainGrid}>
             {getUniqueOrderedProducts().length === 0 ? (
               <div className={styles.emptyState}>
@@ -351,20 +349,21 @@ export default function OrdersPage() {
               getUniqueOrderedProducts().map(product => (
                 <div key={product.id} className={styles.buyAgainCard}>
                   <div className={styles.buyAgainImgWrapper}>
-                    <Image 
-                      src={product.image || '/logo.jpg'} 
-                      alt={product.name} 
-                      width={160} 
-                      height={160} 
+                    <Image
+                      src={product.image || '/logo.jpg'}
+                      alt={product.name}
+                      width={160}
+                      height={160}
                       className={styles.buyAgainImg}
                     />
                   </div>
                   <div className={styles.buyAgainInfo}>
-                    <Link href={`/products`} className={styles.buyAgainName}>
+                    {/* ✅ Fix: link to specific product */}
+                    <Link href={`/products/${product.id}`} className={styles.buyAgainName}>
                       {product.name}
                     </Link>
                     <div className={styles.buyAgainPrice}>₹{product.price.toFixed(2)}</div>
-                    <button 
+                    <button
                       onClick={() => handleBuyItAgain(product)}
                       className={styles.buyAgainActionBtn}
                     >
@@ -376,7 +375,6 @@ export default function OrdersPage() {
             )}
           </div>
         ) : (
-          /* Orders and Not Yet Shipped Tabs Content */
           <div className={styles.ordersList}>
             {filteredOrders.length === 0 ? (
               <div className={styles.emptyState}>
@@ -385,12 +383,12 @@ export default function OrdersPage() {
                   {orders.length === 0 ? "You haven't placed any orders yet" : "No orders found"}
                 </h3>
                 <p>
-                  {orders.length === 0 
+                  {orders.length === 0
                     ? "Experience the rich taste of Northeast India by placing your very first order today!"
-                    : (appliedSearch 
-                       ? `No orders matching "${appliedSearch}" found for the selected time filter.`
-                       : "You haven't placed any orders in this period."
-                      )
+                    : (appliedSearch
+                      ? `No orders matching "${appliedSearch}" found for the selected time filter.`
+                      : "You haven't placed any orders in this period."
+                    )
                   }
                 </p>
                 <Link href="/products" className={styles.shopBtn}>Order Now / Explore Products</Link>
@@ -398,15 +396,15 @@ export default function OrdersPage() {
             ) : (
               filteredOrders.map(order => (
                 <div key={order.id} className={styles.orderCard}>
-                  
-                  {/* Card Header (Meta Info) */}
+
+                  {/* Card Header */}
                   <header className={styles.orderCardHeader}>
                     <div className={styles.headerMetadata}>
                       <div className={styles.metaCol}>
                         <span className={styles.metaLabel}>ORDER PLACED</span>
                         <span className={styles.metaValue}>{formatDate(order.createdAt)}</span>
                       </div>
-                      
+
                       <div className={styles.metaCol}>
                         <span className={styles.metaLabel}>TOTAL</span>
                         <span className={styles.metaValue}>₹{order.total.toFixed(2)}</span>
@@ -414,15 +412,14 @@ export default function OrdersPage() {
 
                       <div className={`${styles.metaCol} ${styles.shipToCol}`}>
                         <span className={styles.metaLabel}>SHIP TO</span>
-                        <button 
+                        <button
                           className={styles.shipToButton}
                           onClick={() => setOpenShipTo(openShipTo === order.id ? null : order.id)}
                         >
                           <span className={styles.shipToName}>{order.user?.name || user?.name || 'Valued Customer'}</span>
                           <ChevronDown size={12} />
                         </button>
-                        
-                        {/* Ship-to address dropdown modal */}
+
                         {openShipTo === order.id && (
                           <div className={styles.shipToDropdown}>
                             <div className={styles.shipToArrow}></div>
@@ -440,32 +437,32 @@ export default function OrdersPage() {
                         <span className={styles.metaLabel}>ORDER # {order.id.slice(0, 18)}...</span>
                       </div>
                       <div className={styles.headerLinks}>
-                        <button 
-                          onClick={() => setActiveInvoice(order)} 
+                        <button
+                          onClick={() => setActiveInvoice(order)}
                           className={styles.headerActionLink}
                         >
                           View order details
                         </button>
                         <span className={styles.headerSeparator}>|</span>
-                        
+
                         <div className={styles.invoiceMenuContainer}>
-                          <button 
-                            onClick={() => setOpenInvoiceMenu(openInvoiceMenu === order.id ? null : order.id)} 
+                          <button
+                            onClick={() => setOpenInvoiceMenu(openInvoiceMenu === order.id ? null : order.id)}
                             className={styles.headerActionLink}
                           >
                             Invoice <ChevronDown size={10} style={{ display: 'inline', marginLeft: 2 }} />
                           </button>
-                          
+
                           {openInvoiceMenu === order.id && (
                             <div className={styles.invoiceMenu}>
-                              <button 
+                              <button
                                 onClick={() => { setActiveInvoice(order); setOpenInvoiceMenu(null); }}
                                 className={styles.invoiceMenuItem}
                               >
                                 <FileText size={14} /> View Invoice
                               </button>
-                              <button 
-                                onClick={() => { 
+                              <button
+                                onClick={() => {
                                   setOpenInvoiceMenu(null);
                                   setTimeout(() => window.print(), 300);
                                 }}
@@ -482,11 +479,9 @@ export default function OrdersPage() {
 
                   {/* Card Body */}
                   <div className={styles.orderCardBody}>
-                    
-                    {/* Left & Middle Column (Products) */}
                     <div className={styles.cardItemsList}>
-                      
-                      {/* Delivery Status Subheader */}
+
+                      {/* Delivery Status */}
                       <div className={styles.deliveryStatusRow}>
                         <h3 className={styles.statusTitle}>
                           {order.status === 'COMPLETED' ? (
@@ -509,17 +504,18 @@ export default function OrdersPage() {
                       {order.items.map(item => (
                         <div key={item.id} className={styles.itemRow}>
                           <div className={styles.itemImageContainer}>
-                            <Image 
-                              src={item.product?.image || '/logo.jpg'} 
-                              alt={item.product?.name || 'Delicacy'} 
-                              width={90} 
+                            <Image
+                              src={item.product?.image || '/logo.jpg'}
+                              alt={item.product?.name || 'Delicacy'}
+                              width={90}
                               height={90}
                               className={styles.itemImage}
                             />
                           </div>
 
                           <div className={styles.itemDetails}>
-                            <Link href={`/products`} className={styles.itemName}>
+                            {/* ✅ Fix: link to specific product */}
+                            <Link href={`/products/${item.product?.id}`} className={styles.itemName}>
                               {item.product?.name || 'Authentic Northeast Food Item'}
                             </Link>
                             <p className={styles.itemMetaInfo}>
@@ -542,14 +538,15 @@ export default function OrdersPage() {
                             )}
 
                             <div className={styles.itemActionButtons}>
-                              <button 
+                              <button
                                 onClick={() => handleBuyItAgain(item.product)}
                                 className={styles.buyItAgainBtn}
                               >
                                 <RefreshCw size={14} className={styles.actionBtnIcon} />
                                 Buy it again
                               </button>
-                              <Link href={`/products`} className={styles.viewItemBtn}>
+                              {/* ✅ Fix: link to specific product */}
+                              <Link href={`/products/${item.product?.id}`} className={styles.viewItemBtn}>
                                 View your item
                               </Link>
                             </div>
@@ -558,25 +555,25 @@ export default function OrdersPage() {
                       ))}
                     </div>
 
-                    {/* Right Column (Actions for whole order) */}
+                    {/* Right Column Actions */}
                     <div className={styles.orderActionsColumn}>
                       {order.status !== 'CANCELLED' && (
-                        <button 
+                        <button
                           onClick={() => setTrackingOrder(order)}
                           className={`${styles.actionButton} ${styles.primaryActionButton}`}
                         >
                           Track package
                         </button>
                       )}
-                      
-                      <button 
+
+                      <button
                         onClick={() => { setFeedbackOrder(order); setFeedbackType('seller'); }}
                         className={styles.actionButton}
                       >
                         Leave seller feedback
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => { setFeedbackOrder(order); setFeedbackType('delivery'); }}
                         className={styles.actionButton}
                       >
@@ -584,11 +581,11 @@ export default function OrdersPage() {
                       </button>
 
                       {order.items.length > 0 && (
-                        <button 
+                        <button
                           onClick={() => setReviewProduct({
                             id: order.items[0].product.id,
                             name: order.items[0].product.name,
-                            image: order.items[0].product.image
+                            image: order.items[0].product.image,
                           })}
                           className={styles.actionButton}
                         >
@@ -596,7 +593,6 @@ export default function OrdersPage() {
                         </button>
                       )}
                     </div>
-
                   </div>
                 </div>
               ))
@@ -604,26 +600,23 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* MODAL 1: TRACKING PROGRESS TIMELINE */}
+        {/* MODAL 1: TRACKING */}
         {trackingOrder && (
           <div className={styles.modalOverlay} onClick={() => setTrackingOrder(null)}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
               <button className={styles.modalCloseBtn} onClick={() => setTrackingOrder(null)}>
                 <X size={20} />
               </button>
-              
+
               <h2 className={styles.modalTitle}>
                 <Truck size={24} style={{ marginRight: 8, color: '#12402b' }} />
                 Track Shipment
               </h2>
               <p className={styles.modalSubtitle}>Order ID: #{trackingOrder.id}</p>
 
-              {/* Timeline diagram */}
               <div className={styles.timeline}>
                 <div className={`${styles.timelineStep} ${styles.stepCompleted}`}>
-                  <div className={styles.stepIndicator}>
-                    <CheckCircle2 size={16} />
-                  </div>
+                  <div className={styles.stepIndicator}><CheckCircle2 size={16} /></div>
                   <div className={styles.stepContent}>
                     <h4>Ordered</h4>
                     <p>{formatDate(trackingOrder.createdAt)}</p>
@@ -631,9 +624,7 @@ export default function OrdersPage() {
                 </div>
 
                 <div className={`${styles.timelineStep} ${styles.stepCompleted}`}>
-                  <div className={styles.stepIndicator}>
-                    <CheckCircle2 size={16} />
-                  </div>
+                  <div className={styles.stepIndicator}><CheckCircle2 size={16} /></div>
                   <div className={styles.stepContent}>
                     <h4>Processed & Packed</h4>
                     <p>Prepared in traditional handcraft bags</p>
@@ -678,7 +669,7 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* MODAL 2: SELLER OR DELIVERY FEEDBACK */}
+        {/* MODAL 2: FEEDBACK */}
         {feedbackType && feedbackOrder && (
           <div className={styles.modalOverlay} onClick={() => { setFeedbackType(null); setFeedbackOrder(null); }}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -698,8 +689,6 @@ export default function OrdersPage() {
                 </div>
               ) : (
                 <form onSubmit={handleFeedbackSubmit} className={styles.modalForm}>
-                  
-                  {/* Rating Selector */}
                   <div className={styles.ratingGroup}>
                     <label className={styles.formLabel}>Rate your experience:</label>
                     <div className={styles.stars}>
@@ -712,9 +701,9 @@ export default function OrdersPage() {
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
                         >
-                          <Star 
-                            size={28} 
-                            fill={(hoverRating || rating) >= star ? '#d4af37' : 'none'} 
+                          <Star
+                            size={28}
+                            fill={(hoverRating || rating) >= star ? '#d4af37' : 'none'}
                             color={(hoverRating || rating) >= star ? '#d4af37' : '#ccd0cf'}
                           />
                         </button>
@@ -722,12 +711,11 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  {/* Comments Input */}
                   <div className={styles.inputGroup}>
                     <label className={styles.formLabel}>Write a brief comment:</label>
-                    <textarea 
+                    <textarea
                       required
-                      placeholder={feedbackType === 'seller' 
+                      placeholder={feedbackType === 'seller'
                         ? 'Describe your experience with the products, packaging authenticity, and freshness...'
                         : 'Describe your delivery experience, courtesy, package protection, and speed...'
                       }
@@ -740,9 +728,9 @@ export default function OrdersPage() {
 
                   <div className={styles.modalActions}>
                     <button type="submit" className={styles.submitBtn}>Submit Feedback</button>
-                    <button 
-                      type="button" 
-                      onClick={() => { setFeedbackType(null); setFeedbackOrder(null); }} 
+                    <button
+                      type="button"
+                      onClick={() => { setFeedbackType(null); setFeedbackOrder(null); }}
                       className={styles.cancelBtn}
                     >
                       Cancel
@@ -764,11 +752,11 @@ export default function OrdersPage() {
 
               <h2 className={styles.modalTitle}>Write a Customer Review</h2>
               <div className={styles.reviewProductMeta}>
-                <Image 
-                  src={reviewProduct.image || '/logo.jpg'} 
-                  alt={reviewProduct.name} 
-                  width={60} 
-                  height={60} 
+                <Image
+                  src={reviewProduct.image || '/logo.jpg'}
+                  alt={reviewProduct.name}
+                  width={60}
+                  height={60}
                   className={styles.reviewProductImg}
                 />
                 <h4 className={styles.reviewProductName}>{reviewProduct.name}</h4>
@@ -781,8 +769,6 @@ export default function OrdersPage() {
                 </div>
               ) : (
                 <form onSubmit={handleReviewSubmit} className={styles.modalForm}>
-                  
-                  {/* Rating Selector */}
                   <div className={styles.ratingGroup}>
                     <label className={styles.formLabel}>Overall Rating:</label>
                     <div className={styles.stars}>
@@ -795,9 +781,9 @@ export default function OrdersPage() {
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
                         >
-                          <Star 
-                            size={28} 
-                            fill={(hoverRating || rating) >= star ? '#d4af37' : 'none'} 
+                          <Star
+                            size={28}
+                            fill={(hoverRating || rating) >= star ? '#d4af37' : 'none'}
                             color={(hoverRating || rating) >= star ? '#d4af37' : '#ccd0cf'}
                           />
                         </button>
@@ -805,10 +791,9 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  {/* Comments Input */}
                   <div className={styles.inputGroup}>
                     <label className={styles.formLabel}>Review description:</label>
-                    <textarea 
+                    <textarea
                       required
                       placeholder="What did you like or dislike? How does it taste? Share your culinary secrets!"
                       value={comments}
@@ -820,9 +805,9 @@ export default function OrdersPage() {
 
                   <div className={styles.modalActions}>
                     <button type="submit" className={styles.submitBtn}>Submit Review</button>
-                    <button 
-                      type="button" 
-                      onClick={() => setReviewProduct(null)} 
+                    <button
+                      type="button"
+                      onClick={() => setReviewProduct(null)}
                       className={styles.cancelBtn}
                     >
                       Cancel
@@ -834,7 +819,7 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* MODAL 4: INVOICE DETAILS SCREEN */}
+        {/* MODAL 4: INVOICE */}
         {activeInvoice && (
           <div className={styles.modalOverlay} onClick={() => setActiveInvoice(null)}>
             <div className={`${styles.modalContent} ${styles.invoiceModalWidth}`} onClick={(e) => e.stopPropagation()}>
@@ -845,12 +830,12 @@ export default function OrdersPage() {
               <div className={styles.printableInvoice} id="printable-invoice-content">
                 <header className={styles.invoiceHeader}>
                   <div className={styles.invoiceBranding}>
-                    <Image 
-                      src="/logo.jpg" 
-                      alt="Northeast Store Logo" 
-                      width={120} 
-                      height={40} 
-                      className={styles.invoiceLogo} 
+                    <Image
+                      src="/logo.jpg"
+                      alt="Northeast Store Logo"
+                      width={120}
+                      height={40}
+                      className={styles.invoiceLogo}
                     />
                     <h2 className={styles.invoiceTitle}>Invoice / Payment Receipt</h2>
                   </div>
@@ -928,7 +913,7 @@ export default function OrdersPage() {
               </div>
 
               <div className={styles.modalActions}>
-                <button 
+                <button
                   onClick={() => window.print()}
                   className={`${styles.submitBtn} ${styles.printBtn}`}
                 >
