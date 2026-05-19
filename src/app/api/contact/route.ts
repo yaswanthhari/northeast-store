@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { sendContactEmail } from '@/lib/mail';
+import type { ContactFormData } from '@/types/store';
 
 export async function POST(request: Request) {
   try {
-    const { name, email, message } = await request.json();
+    const { name, email, message } = (await request.json()) as ContactFormData;
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });

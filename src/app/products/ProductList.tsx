@@ -6,10 +6,11 @@ import { Filter, SlidersHorizontal, Search, ChevronRight } from 'lucide-react';
 import styles from './products.module.css';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
+import type { CategoryWithProductCount, Product } from '@/types/store';
 
 interface ProductListProps {
-  initialProducts: any[];
-  categories: any[];
+  initialProducts: Product[];
+  categories: CategoryWithProductCount[];
   activeCategory?: string;
 }
 

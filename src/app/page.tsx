@@ -1,36 +1,37 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mountain, HeartHandshake, Leaf, ShoppingBag, ArrowRight, Star, Quote, UtensilsCrossed } from 'lucide-react';
-import DandelionEffect from '@/components/DandelionEffect';
-import LeafEffect from '@/components/LeafEffect';
+import { HeartHandshake, Leaf, ShoppingBag, ArrowRight, Star, Quote, UtensilsCrossed } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import HeroContent from '@/components/HeroContent';
 import styles from './page.module.css';
 import { prisma } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+// ✅ Fix 5: replaced force-dynamic with revalidation — pages are cached and rebuilt every 60s
+export const revalidate = 60;
 
 export default async function Home() {
-  const popularProducts = await prisma.product.findMany({
-    where: { isPopular: true },
-    take: 6,
-    orderBy: { createdAt: 'desc' }
-  });
 
-  const latestProducts = await prisma.product.findMany({
-    where: { isNew: true },
-    take: 4,
-    orderBy: { createdAt: 'desc' }
-  });
-
-  const topSelling = await prisma.product.findMany({
-    where: { isBestseller: true },
-    take: 4,
-    orderBy: { createdAt: 'desc' }
-  });
-
-  const testimonials = await prisma.testimonial.findMany({ take: 3 });
-  const recipes = await prisma.recipe.findMany({ take: 3 });
+  // ✅ Fix 4: all 5 queries run in parallel instead of one after another
+  const [popularProducts, latestProducts, topSelling, testimonials, recipes] =
+    await Promise.all([
+      prisma.product.findMany({
+        where: { isPopular: true },
+        take: 6,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.product.findMany({
+        where: { isNew: true },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.product.findMany({
+        where: { isBestseller: true },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.testimonial.findMany({ take: 3 }),
+      prisma.recipe.findMany({ take: 3 }),
+    ]);
 
   return (
     <div className={styles.page}>
@@ -86,7 +87,7 @@ export default async function Home() {
           </div>
           <div className={styles.productGrid}>
             {popularProducts.map((p, i) => (
-              <ProductCard key={p.id} product={p as any} index={i} />
+              <ProductCard key={p.id} product={p} index={i} />
             ))}
           </div>
         </div>
@@ -132,7 +133,7 @@ export default async function Home() {
               <h2 className={styles.rowTitle}>Our Latest Products</h2>
               <div className={styles.productList}>
                 {latestProducts.map((p, i) => (
-                  <ProductCard key={p.id} product={p as any} index={i} />
+                  <ProductCard key={p.id} product={p} index={i} />
                 ))}
               </div>
             </div>
@@ -140,7 +141,7 @@ export default async function Home() {
               <h2 className={styles.rowTitle}>Top Selling Products</h2>
               <div className={styles.productList}>
                 {topSelling.map((p, i) => (
-                  <ProductCard key={p.id} product={p as any} index={i} />
+                  <ProductCard key={p.id} product={p} index={i} />
                 ))}
               </div>
             </div>
@@ -159,7 +160,9 @@ export default async function Home() {
             {testimonials.map((t) => (
               <div key={t.id} className={styles.testimonialCard}>
                 <div className={styles.stars}>
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="#d4af37" color="#d4af37" />)}
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} fill="#d4af37" color="#d4af37" />
+                  ))}
                 </div>
                 <p className={styles.testimonialContent}>"{t.content}"</p>
                 <div className={styles.testimonialUser}>

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, type Category } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -36,7 +36,7 @@ async function main() {
     { name: 'Grains', slug: 'grains' },
   ];
 
-  const createdCategories: any[] = [];
+  const createdCategories: Category[] = [];
   for (const cat of categories) {
     const created = await prisma.category.create({ data: cat });
     createdCategories.push(created);

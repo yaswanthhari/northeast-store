@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import { sendOrderConfirmation } from '@/lib/mail';
@@ -6,18 +7,44 @@ import { sendOrderConfirmation } from '@/lib/mail';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+interface OrderRequestItem {
+  id: string;
+  name?: string;
+  price: number;
+  quantity: number;
+}
+
+interface ShippingDetails {
+  address: string;
+  city: string;
+  postalCode: string;
+}
+
+interface CreateOrderRequest {
+  items?: OrderRequestItem[];
+  total: number;
+  shippingDetails: ShippingDetails;
+}
+
+type DraftOrderData = Omit<Prisma.OrderUncheckedCreateInput, 'userId'> & {
+  userId?: string;
+};
+
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : 'Internal Server Error';
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();
     
-    const { items, total, shippingDetails } = await request.json();
+    const { items, total, shippingDetails } = (await request.json()) as CreateOrderRequest;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
     }
 
     // Verify all products exist
-    const productIds = items.map((item: any) => item.id);
+    const productIds = items.map((item: OrderRequestItem) => item.id);
     const existingProducts = await prisma.product.findMany({
       where: { id: { in: productIds } }
     });
@@ -32,14 +59,14 @@ export async function POST(request: Request) {
     }
 
     // 1. Create the Order
-    const orderData: any = {
+    const orderData: DraftOrderData = {
       total: total,
       status: 'PENDING',
       shippingAddress: shippingDetails.address,
       city: shippingDetails.city,
       postalCode: shippingDetails.postalCode,
       items: {
-        create: items.map((item: any) => ({
+        create: items.map((item: OrderRequestItem) => ({
           productId: item.id,
           quantity: item.quantity,
           price: item.price,
@@ -65,7 +92,7 @@ export async function POST(request: Request) {
     orderData.userId = user.id;
 
     const order = await prisma.order.create({
-      data: orderData,
+      data: orderData as Prisma.OrderUncheckedCreateInput,
       include: {
         items: {
           include: {
@@ -94,32 +121,36 @@ export async function POST(request: Request) {
       emailStatus: emailSent ? 'Sent' : 'Failed'
     }, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Order creation error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: getErrorMessage(error) }, { status: 500 });
   }
 }
 
+// ✅ Fix — add session check at the top of GET()
 export async function GET() {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
+    const isAdmin = session.role === 'ADMIN';
     const orders = await prisma.order.findMany({
+      where: isAdmin ? {} : { userId: session.id as string }, // users only see their own
       include: {
         user: true,
-        items: {
-          include: {
-            product: true,
-          },
-        },
+        items: { include: { product: true } },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
     });
-
     return NextResponse.json({ orders }, { status: 200 });
-  } catch (error: any) {
-    console.error('Failed to fetch orders:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
-  }
-}
+  } catch (error) {
+  console.error('[FETCH ORDERS ERROR]', error);
 
+  return NextResponse.json(
+    { error: 'Failed to fetch orders' },
+    { status: 500 }
+  );
+}
+}

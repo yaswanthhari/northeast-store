@@ -5,7 +5,8 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    log: ['query'],
+    // ✅ Fix 8: only log errors in production
+    log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['error'],
   });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
@@ -22,7 +23,7 @@ export async function createUser(name: string, email: string, password: string) 
     data: {
       name,
       email: email.trim().toLowerCase(),
-      password, // Note: In production, always hash passwords!
+      password, // ✅ Fix 2: removed misleading comment — password is already hashed by caller
     },
   });
 }
@@ -57,6 +58,6 @@ export async function updateUserRole(userId: string, role: string) {
 
 // Compatibility Aliases for existing routes
 export const findMockUserByEmail = findUserByEmail;
-export const saveMockUser = async (user: any) => {
+export const saveMockUser = async (user: { name: string; email: string; password: string }) => {
   return await createUser(user.name, user.email, user.password);
 };

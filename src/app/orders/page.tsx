@@ -101,8 +101,8 @@ export default function OrdersPage() {
       }
       const data = await res.json();
       setOrders(data.orders || []);
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -164,7 +164,7 @@ export default function OrdersPage() {
   };
 
   // Re-order Action (Buy It Again)
-  const handleBuyItAgain = (product: any) => {
+  const handleBuyItAgain = (product: OrderItem['product']) => {
     addToCart({
       id: product.id,
       name: product.name,
@@ -175,7 +175,7 @@ export default function OrdersPage() {
 
   // Get unique list of past ordered products for "Buy Again" tab
   const getUniqueOrderedProducts = () => {
-    const productsMap = new Map();
+    const productsMap = new Map<string, OrderItem['product']>();
     orders.forEach(order => {
       order.items.forEach(item => {
         if (item.product && !productsMap.has(item.product.id)) {

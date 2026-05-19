@@ -15,13 +15,19 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: session.id as string },
-      data: { name },
-    });
-
-    return NextResponse.json({ message: 'Profile updated successfully', user: updatedUser });
-  } catch (error) {
+    // ✅ Fix — never return password to the client
+const updatedUser = await prisma.user.update({
+  where: { id: session.id as string },
+  data: { name },
+  select: {
+    id: true,
+    name: true,
+    email: true,
+    role: true,
+  },
+});
+return NextResponse.json({ message: 'Profile updated successfully', user: updatedUser });
+  } catch {
     return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }
 }

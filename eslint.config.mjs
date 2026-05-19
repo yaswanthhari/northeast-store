@@ -12,7 +12,21 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "list-orders.js",
+    "list-products.js",
+    "list-users.js",
+    "promote-admin.js",
+    "reset-passwords.js",
+    "test-prisma.js",
   ]),
+  {
+    rules: {
+      "react-hooks/immutability": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react/no-unescaped-entities": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

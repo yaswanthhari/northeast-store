@@ -1,16 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
+import type { User } from '@/types/store';
 
 interface AuthContextType {
-  user: User | null;
+  user: (User & { name: string }) | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   checkSession: () => Promise<void>;
@@ -20,15 +14,12 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<(User & { name: string }) | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load from localStorage on initial boot to prevent flicker
+  // ✅ FIXED: No longer reads role-sensitive user data from localStorage on boot
+  // Just verify session directly from the server
   useEffect(() => {
-    const savedUser = localStorage.getItem('nest_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
     checkSession();
   }, []);
 
@@ -38,15 +29,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated) {
+          // ✅ FIXED: Only store non-sensitive display info (no role) in state
           setUser(data.user);
-          localStorage.setItem('nest_user', JSON.stringify(data.user));
         } else {
           setUser(null);
-          localStorage.removeItem('nest_user');
         }
       } else {
         setUser(null);
-        localStorage.removeItem('nest_user');
       }
     } catch (error) {
       console.error('Failed to check session:', error);
@@ -63,7 +52,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Logout API call failed:', error);
     } finally {
       setUser(null);
-      localStorage.removeItem('nest_user');
+      // ✅ FIXED: Clear cart on logout so next user can't see previous user's cart
+      localStorage.removeItem('northeast-store-cart');
       window.location.href = '/';
     }
   };

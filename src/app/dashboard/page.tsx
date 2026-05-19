@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './dashboard.module.css';
+import type { Order, OrderItem } from '@/types/store';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading, logout, checkSession } = useAuth();
@@ -14,7 +15,7 @@ export default function DashboardPage() {
   const [newName, setNewName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function DashboardPage() {
         try {
           const res = await fetch('/api/orders', { cache: 'no-store' });
           if (res.ok) {
-            const data = await res.json();
+            const data = (await res.json()) as { orders?: Order[] };
             setRecentOrders(data.orders?.slice(0, 3) || []);
           }
         } catch (err) {
@@ -181,7 +182,7 @@ export default function DashboardPage() {
                     </div>
                     <div className={styles.recentOrderBody}>
                       <div className={styles.recentOrderImages}>
-                        {order.items.slice(0, 3).map((item: any) => (
+                        {order.items.slice(0, 3).map((item: OrderItem) => (
                           <div key={item.id} className={styles.recentOrderImgWrapper}>
                             <Image
                               src={item.product?.image || '/logo.jpg'}

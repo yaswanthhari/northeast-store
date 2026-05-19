@@ -4,30 +4,32 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import styles from './admin.module.css';
+import type { User } from '@/types/store';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
+type AdminUser = User & {
   lastActive: string;
   createdAt: string;
+};
+
+interface SmtpStatus {
+  environment: string;
+  variables: Record<string, string>;
 }
 
 export default function AdminDashboard() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [emailLogs, setEmailLogs] = useState('');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, online: 0 });
-  const [smtpStatus, setSmtpStatus] = useState<any>(null);
+  const [smtpStatus, setSmtpStatus] = useState<SmtpStatus | null>(null);
 
   const fetchEmailLogs = async () => {
     try {
       const res = await fetch('/api/admin/email-logs');
       if (res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as { logs: string };
         setEmailLogs(data.logs);
       }
     } catch (error) {
@@ -39,7 +41,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('/api/admin/smtp-check');
       if (res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as SmtpStatus;
         setSmtpStatus(data);
       }
     } catch (error) {
@@ -66,13 +68,13 @@ export default function AdminDashboard() {
         }
         return;
       }
-      const data = await res.json();
+      const data = (await res.json()) as AdminUser[];
       setUsers(data);
       setErrorMsg(null);
       
       // Calculate stats
       const fifteenMinsAgo = new Date(Date.now() - 15 * 60 * 1000);
-      const onlineCount = data.filter((u: User) => new Date(u.lastActive) > fifteenMinsAgo).length;
+      const onlineCount = data.filter((u: AdminUser) => new Date(u.lastActive) > fifteenMinsAgo).length;
       setStats({ total: data.length, online: onlineCount });
     } catch (error) {
       console.error(error);
@@ -238,7 +240,7 @@ export default function AdminDashboard() {
                 If any say <strong style={{ color: '#e74c3c' }}>MISSING</strong>, they must be added to your Vercel Project Settings for <strong>Production</strong>.
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                {Object.entries(smtpStatus.variables || {}).map(([key, val]: any) => {
+                {Object.entries(smtpStatus.variables || {}).map(([key, val]: [string, string]) => {
                   const isMissing = val.includes('MISSING') || val.includes('EMPTY');
                   return (
                     <div key={key} style={{

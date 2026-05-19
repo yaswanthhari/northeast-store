@@ -18,6 +18,8 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   orders     Order[]
+  resetToken        String?
+  resetTokenExpiry  DateTime?
 }
 
 model Category {

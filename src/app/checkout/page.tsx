@@ -6,6 +6,18 @@ import { ArrowLeft, CreditCard, Truck, ShieldCheck, Loader2, AlertCircle } from 
 import Link from 'next/link';
 import styles from './checkout.module.css';
 
+interface SessionResponse {
+  authenticated: boolean;
+  user?: {
+    email?: string;
+    name?: string;
+  };
+}
+
+interface OrderResponse {
+  error?: string;
+}
+
 export default function CheckoutPage() {
   const { cart, totalPrice, clearCart } = useCart();
   const [isOrdered, setIsOrdered] = React.useState(false);
@@ -28,19 +40,20 @@ export default function CheckoutPage() {
     async function checkAuth() {
       try {
         const res = await fetch('/api/auth/session');
-        const data = await res.json();
+        const data = (await res.json()) as SessionResponse;
         setIsAuthenticated(data.authenticated);
-        if (data.authenticated && data.user) {
+        const sessionUser = data.user;
+        if (data.authenticated && sessionUser) {
           setFormData(prev => ({
             ...prev, 
-            email: data.user.email || '', 
-            firstName: data.user.name?.split(' ')[0] || '',
-            lastName: data.user.name?.split(' ').slice(1).join(' ') || ''
+            email: sessionUser.email || '', 
+            firstName: sessionUser.name?.split(' ')[0] || '',
+            lastName: sessionUser.name?.split(' ').slice(1).join(' ') || ''
           }));
         }
-      } catch (err) {
-        setIsAuthenticated(false);
-      } finally {
+      } catch {
+  setIsAuthenticated(false);
+} finally {
         setIsCheckingAuth(false);
       }
     }
@@ -57,7 +70,11 @@ export default function CheckoutPage() {
       setError("Please login to place an order.");
       return;
     }
-
+    
+     if (cart.length === 0) {
+      setError("Your cart is empty. Please add items before checking out.");
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
@@ -77,7 +94,7 @@ export default function CheckoutPage() {
         }),
       });
 
-      const data = await response.json();
+      const data = (await response.json()) as OrderResponse;
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to place order');
@@ -85,8 +102,8 @@ export default function CheckoutPage() {
 
       setIsOrdered(true);
       clearCart();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to place order');
     } finally {
       setIsLoading(false);
     }

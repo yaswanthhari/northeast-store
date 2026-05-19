@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
+import type { ContactFormData, Order, OrderItem } from '@/types/store';
 
 // Helper to extract a valid email address from a string (e.g. "Name <email@domain.com>" -> "email@domain.com")
 const getValidEmail = (input: string | undefined, fallback: string): string => {
@@ -11,8 +12,8 @@ const getValidEmail = (input: string | undefined, fallback: string): string => {
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return trimmed;
   return fallback;
 };
-
-export async function sendOrderConfirmation(order: any, userEmail: string, userName: string) {
+// ✅ Fix
+export async function sendOrderConfirmation(order: Order, userEmail: string, userName: string) {
   const name = userName || 'Valued Customer';
 
   // Configure the email transporter inside the function to ensure fresh env variables
@@ -75,7 +76,7 @@ export async function sendOrderConfirmation(order: any, userEmail: string, userN
             </tr>
           </thead>
           <tbody>
-            ${order.items.map((item: any) => {
+            ${order.items.map((item: OrderItem) => {
               // Convert local path to absolute URL
               const imgUrl = item.product.image.startsWith('http') ? item.product.image : `${baseUrl}${item.product.image}`;
               return `
@@ -152,7 +153,7 @@ Thank you for choosing The NorthEast Store! We've received your order...
     { port: 587, secure: false }, // TLS
   ];
 
-  let lastError = null;
+  let lastError: unknown = null;
   for (const option of connectionOptions) {
     try {
       console.log(`[Email Service] Attempting delivery via Port ${option.port}...`);
@@ -187,17 +188,19 @@ Thank you for choosing The NorthEast Store! We've received your order...
       fs.appendFileSync(logPath, `\n--- SUCCESS VIA PORT ${option.port} AT ${new Date().toLocaleString()} ---\nTo: ${userEmail}\n`);
       
       return; // Exit if successful
-    } catch (err: any) {
-      console.warn(`[Email Service] Port ${option.port} failed: ${err.message}`);
-      lastError = err;
-    }
+    // ✅ Fix
+// ✅ Fix
+} catch (error) {
+  console.warn(`[Email Service] Port ${option.port} failed: ${(error as Error).message}`);
+  lastError = error;
+}
   }
 
   // If we get here, both ports failed
   console.error('[Email Service] ALL DELIVERY ATTEMPTS FAILED:', lastError);
 }
 
-export async function sendContactEmail(contactData: { name: string, email: string, message: string }) {
+export async function sendContactEmail(contactData: ContactFormData) {
   const user = process.env.SMTP_USER?.trim();
   const pass = process.env.SMTP_PASS?.trim();
   const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
@@ -249,3 +252,69 @@ export async function sendContactEmail(contactData: { name: string, email: strin
   }
 }
 
+export async function sendResetPasswordEmail(
+  toEmail: string,
+  userName: string,
+  otp: string
+) {
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+  const fromHeader = process.env.SMTP_FROM || `"The NorthEast Store" <${user}>`;
+
+  if (!user || !pass) {
+    console.error('[Email] SMTP credentials missing — cannot send reset email');
+    return;
+  }
+
+  const htmlContent = `
+    <div style="font-family: sans-serif; max-width: 500px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+      <div style="background: linear-gradient(135deg, #12402b, #0d281b); padding: 24px; text-align: center;">
+        <h1 style="color: #d4af37; margin: 0; font-size: 20px;">The NorthEast Store</h1>
+      </div>
+      <div style="padding: 30px 25px;">
+        <h2 style="color: #2d3748;">Hi ${userName},</h2>
+        <p style="color: #4a5568;">We received a request to reset your password. Use the OTP below — it expires in <strong>15 minutes</strong>.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <span style="font-size: 36px; font-weight: 800; letter-spacing: 8px; color: #12402b; background: #f0fff4; padding: 16px 24px; border-radius: 8px; border: 2px dashed #12402b;">
+            ${otp}
+          </span>
+        </div>
+        <p style="color: #718096; font-size: 13px;">If you did not request a password reset, you can safely ignore this email.</p>
+      </div>
+    </div>
+  `;
+
+  const connectionOptions = [
+    { port: 465, secure: true },
+    { port: 587, secure: false },
+  ];
+
+  for (const option of connectionOptions) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host,
+        port: option.port,
+        secure: option.secure,
+        auth: { user, pass },
+        tls: { rejectUnauthorized: false },
+      });
+
+      await transporter.sendMail({
+        from: fromHeader,
+        to: toEmail,
+        subject: `Your Password Reset OTP — The NorthEast Store`,
+        html: htmlContent,
+      });
+
+      console.log(`[Email] Reset OTP sent to ${toEmail} via port ${option.port}`);
+      return;
+    // ✅ Fix
+     // ✅ Fix
+} catch (error) {
+  console.warn(`[Email] Port ${option.port} failed: ${(error as Error).message}`);
+}
+  }
+
+  console.error('[Email] All delivery attempts failed for reset email');
+}

@@ -5,17 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import styles from './ProductCard.module.css';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  discountPrice?: number | null;
-  state: string;
-  image: string;
-  isNew?: boolean;
-  isBestseller?: boolean;
-}
+import type { Product } from '@/types/store';
 
 export default function ProductCard({ product, index }: { product: Product, index: number }) {
   const { addToCart } = useCart();
@@ -30,7 +20,7 @@ export default function ProductCard({ product, index }: { product: Product, inde
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.1, 0.3) }} // ✅ Fix 7: capped at 300ms
     >
       <div className={styles.imageWrapper}>
         <div className={styles.badges}>

@@ -1,9 +1,10 @@
 import React from 'react';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import ProductList from './ProductList';
 import styles from './products.module.css';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function ProductsPage({
   searchParams,
@@ -14,7 +15,7 @@ export default async function ProductsPage({
   const search = typeof params.search === 'string' ? params.search : undefined;
   const categorySlug = typeof params.category === 'string' ? params.category : undefined;
 
-  const where: any = {};
+  const where: Prisma.ProductWhereInput = {};
   
   if (search) {
     where.OR = [
@@ -52,8 +53,8 @@ export default async function ProductsPage({
 
       <main className="container py-12">
         <ProductList 
-          initialProducts={products as any[]} 
-          categories={categories as any[]}
+          initialProducts={products} 
+          categories={categories}
           activeCategory={categorySlug}
         />
       </main>
