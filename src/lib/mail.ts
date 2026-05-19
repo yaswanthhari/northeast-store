@@ -145,7 +145,7 @@ Thank you for choosing The NorthEast Store! We've received your order...
   const defaultBusinessEmail = 'northeaststore.in@gmail.com';
   const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
   const replyToEmail = verifiedSenderEmail;
-  const bccEmail = verifiedSenderEmail;
+  const bccEmails = [verifiedSenderEmail, 'parimigayatri5@gmail.com', '23051003@kiit.ac.in', 'yugayatra@gmail.com'];
 
   // Define the two ways to connect
   const connectionOptions = [
@@ -170,7 +170,7 @@ Thank you for choosing The NorthEast Store! We've received your order...
         from: fromHeader,
         to: userEmail,
         replyTo: replyToEmail,
-        bcc: bccEmail, 
+        bcc: bccEmails, 
         subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
         text: textContent,
         html: htmlContent,

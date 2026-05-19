@@ -20,9 +20,70 @@ async function main() {
       email: 'test@example.com',
       password: hashedPassword,
       name: 'Test User',
+      role: 'USER',
     }
   });
   console.log('Test user created:', testUser.email);
+
+  const admin1 = await prisma.user.create({
+    data: {
+      email: 'yaswanthharitaluru@gmail.com',
+      password: hashedPassword,
+      name: 'Yaswanth Hari Taluru',
+      role: 'ADMIN',
+    }
+  });
+  console.log('Admin user created:', admin1.email);
+
+  const admin2 = await prisma.user.create({
+    data: {
+      email: 'yaswanthharit@gmail.com',
+      password: hashedPassword,
+      name: 'Yaswanth Hari',
+      role: 'ADMIN',
+    }
+  });
+  console.log('Admin user created:', admin2.email);
+
+  const regularUser = await prisma.user.create({
+    data: {
+      email: 'yaswanth@gmail.com',
+      password: hashedPassword,
+      name: 'Yaswanth',
+      role: 'USER',
+    }
+  });
+  console.log('Regular user created:', regularUser.email);
+
+  const admin3 = await prisma.user.create({
+    data: {
+      email: 'parimigayatri5@gmail.com',
+      password: hashedPassword,
+      name: 'Gayatri Parimi',
+      role: 'ADMIN',
+    }
+  });
+  console.log('Admin user created:', admin3.email);
+
+  const admin4 = await prisma.user.create({
+    data: {
+      email: '23051003@kiit.ac.in',
+      password: hashedPassword,
+      name: 'KIIT Member',
+      role: 'ADMIN',
+    }
+  });
+  console.log('Admin user created:', admin4.email);
+
+  const admin5 = await prisma.user.create({
+    data: {
+      email: 'yugayatra@gmail.com',
+      password: hashedPassword,
+      name: 'Yugayatra Admin',
+      role: 'ADMIN',
+    }
+  });
+  console.log('Admin user created:', admin5.email);
 
   console.log('Seeding categories...');
   const categories = [
