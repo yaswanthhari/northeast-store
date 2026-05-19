@@ -128,16 +128,19 @@ export async function POST(request: Request) {
 }
 
 // ✅ Fix — add session check at the top of GET()
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all') === 'true';
     const isAdmin = session.role === 'ADMIN';
+
     const orders = await prisma.order.findMany({
-      where: isAdmin ? {} : { userId: session.id as string }, // users only see their own
+      where: (isAdmin && all) ? {} : { userId: session.id as string }, // users only see their own, admins only see all if explicitly requested
       include: {
         user: true,
         items: { include: { product: true } },
