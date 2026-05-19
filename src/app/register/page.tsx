@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
       if (res.ok) {
         await checkSession();
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       } else {
         const data = await res.json();
         setError(data.error || 'Failed to register');
