@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { findMockUserByEmail } from '@/lib/db';
 import { signToken } from '@/lib/auth';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
@@ -32,6 +32,18 @@ export async function POST(request: Request) {
       path: '/',
       maxAge: 60 * 60 * 24, // 24 hours
     });
+
+    // For mobile clients, also return the token in the body
+    const headerStore = await headers();
+    const isMobile = headerStore.get('x-client') === 'mobile';
+    
+    if (isMobile) {
+      return NextResponse.json({
+        message: 'Logged in successfully',
+        token,
+        user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      }, { status: 200 });
+    }
 
     return NextResponse.json({ message: 'Logged in successfully' }, { status: 200 });
   } catch (error) {
