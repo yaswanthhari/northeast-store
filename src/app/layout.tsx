@@ -17,6 +17,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: 'NortheastStore.in | Authentic Foods of the Eight States',
   description: 'Discover unique, region-specific organic and traditional food products from all eight states of Northeast India.',
+  manifest: '/manifest.json',
+  icons: {
+    apple: '/icon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
