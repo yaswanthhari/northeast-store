@@ -1,0 +1,20 @@
+import { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'Northeast Store',
+    short_name: 'NortheastStore',
+    description: 'Discover authentic, traditional, and organic food products from Northeast India.',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#073B25',
+    theme_color: '#073B25',
+    icons: [
+      {
+        src: '/icon.png',
+        sizes: 'any',
+        type: 'image/png',
+      },
+    ],
+  };
+}
