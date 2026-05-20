@@ -163,7 +163,9 @@ Thank you for choosing The NorthEast Store! We've received your order...
         port: option.port,
         secure: option.secure,
         auth: { user, pass },
-        tls: { rejectUnauthorized: false }
+        tls: { rejectUnauthorized: false },
+        connectionTimeout: 8000,  // 8s — must complete before Vercel's 10s limit
+        greetingTimeout: 8000,
       });
 
       await transporter.sendMail({
@@ -235,7 +237,9 @@ export async function sendContactEmail(contactData: ContactFormData) {
         port: option.port,
         secure: option.secure,
         auth: { user, pass },
-        tls: { rejectUnauthorized: false }
+        tls: { rejectUnauthorized: false },
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
       });
 
       await transporter.sendMail({
@@ -298,6 +302,8 @@ export async function sendResetPasswordEmail(
         secure: option.secure,
         auth: { user, pass },
         tls: { rejectUnauthorized: false },
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
       });
 
       await transporter.sendMail({

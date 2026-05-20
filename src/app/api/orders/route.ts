@@ -102,24 +102,29 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send email confirmation
-    let emailSent = false;
     const recipientEmail = user.email;
     const recipientName = user.name || 'Valued Customer';
-    
-    try {
-      console.log(`Sending order confirmation to registered user: ${recipientEmail} (${recipientName})`);
-      await sendOrderConfirmation(order, recipientEmail, recipientName);
-      emailSent = true;
-    } catch (emailError) {
-      console.error('Failed to send email:', emailError);
-    }
-    
-    return NextResponse.json({ 
-      message: 'Order placed successfully', 
+
+    // Return success response IMMEDIATELY — do not block on email.
+    // Vercel serverless functions timeout in 10s; SMTP handshakes can take 5–15s.
+    // Fire the email as a non-blocking background task after we've already responded.
+    const response = NextResponse.json({
+      message: 'Order placed successfully',
       orderId: order.id,
-      emailStatus: emailSent ? 'Sent' : 'Failed'
+      emailStatus: 'Queued'
     }, { status: 201 });
+
+    // Non-blocking fire-and-forget — intentionally not awaited
+    console.log(`[Email] Queuing order confirmation for ${recipientEmail} (order: ${order.id})`);
+    sendOrderConfirmation(order, recipientEmail, recipientName)
+      .then(() => {
+        console.log(`[Email] SUCCESS: Order confirmation delivered to ${recipientEmail}`);
+      })
+      .catch((emailError: Error) => {
+        console.error(`[Email] FAILED to deliver to ${recipientEmail}:`, emailError?.message || emailError);
+      });
+
+    return response;
 
   } catch (error: unknown) {
     console.error('Order creation error:', error);
