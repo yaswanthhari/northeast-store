@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import type { ContactFormData, Order, OrderItem } from '@/types/store';
 
 // Helper to extract a valid email address from a string (e.g. "Name <email@domain.com>" -> "email@domain.com")
@@ -130,6 +131,42 @@ Thank you for choosing The NorthEast Store! We've received your order...
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `;
 
+  // ─── PRIMARY: Resend API (serverless-native, no IP blocks) ─────────────────
+  const resendKey = process.env.RESEND_API_KEY?.trim();
+  const allAdminEmails = [
+    'northeaststore.in@gmail.com',
+    'yaswanthharitaluru@gmail.com',
+    'yaswanthharit@gmail.com',
+    'parimigayatri5@gmail.com',
+    '23051003@kiit.ac.in',
+    'yugayatra@gmail.com',
+  ];
+
+  if (resendKey) {
+    try {
+      const resend = new Resend(resendKey);
+      console.log(`[Email] Using Resend API to deliver to ${userEmail} + ${allAdminEmails.length} admins`);
+      const { error } = await resend.emails.send({
+        from: 'The NorthEast Store <orders@resend.dev>',
+        to: [userEmail],
+        bcc: allAdminEmails,
+        subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
+        html: htmlContent,
+        text: textContent,
+      });
+      if (error) {
+        console.error('[Email] Resend error:', error);
+      } else {
+        console.log(`[Email] Resend SUCCESS: delivered to ${userEmail}`);
+        return;
+      }
+    } catch (resendError) {
+      console.error('[Email] Resend threw:', (resendError as Error).message);
+      // fall through to SMTP
+    }
+  }
+
+  // ─── FALLBACK: Gmail SMTP ───────────────────────────────────────────────────
   // --- FAIL-SAFE TRANSPORTER CONFIG ---
   const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
   const user = process.env.SMTP_USER?.trim();
@@ -141,11 +178,19 @@ Thank you for choosing The NorthEast Store! We've received your order...
     return;
   }
 
+
   // Derive safe, valid email addresses for headers
   const defaultBusinessEmail = 'northeaststore.in@gmail.com';
   const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
   const replyToEmail = verifiedSenderEmail;
-  const bccEmails = [verifiedSenderEmail, 'parimigayatri5@gmail.com', '23051003@kiit.ac.in', 'yugayatra@gmail.com'];
+  const bccEmails = [
+    verifiedSenderEmail,        // northeaststore.in@gmail.com (sender copy)
+    'yaswanthharitaluru@gmail.com',
+    'yaswanthharit@gmail.com',
+    'parimigayatri5@gmail.com',
+    '23051003@kiit.ac.in',
+    'yugayatra@gmail.com',
+  ];
 
   // Define the two ways to connect
   const connectionOptions = [
