@@ -14,7 +14,7 @@ async function main() {
   await prisma.recipe.deleteMany();
 
   console.log('Seeding users...');
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  const hashedPassword = await bcrypt.hash('Yaswanth@1881@', 10);
   const testUser = await prisma.user.create({
     data: {
       email: 'test@example.com',

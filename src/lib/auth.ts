@@ -15,7 +15,7 @@ export async function signToken(payload: Record<string, unknown>) {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('24h')
+    .setExpirationTime('30d')
     .sign(JWT_SECRET);
 
   return token;
