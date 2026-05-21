@@ -13,7 +13,6 @@ const getValidEmail = (input: string | undefined, fallback: string): string => {
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return trimmed;
   return fallback;
 };
-// ✅ Fix
 export async function sendOrderConfirmation(order: Order, userEmail: string, userName: string) {
   const name = userName || 'Valued Customer';
 
@@ -131,25 +130,78 @@ Thank you for choosing The NorthEast Store! We've received your order...
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `;
 
-  // ─── PRIMARY: Resend API (serverless-native, no IP blocks) ─────────────────
-  const resendKey = process.env.RESEND_API_KEY?.trim();
-  const allAdminEmails = [
-    'northeaststore.in@gmail.com',
-    'yaswanthharitaluru@gmail.com',
-    'yaswanthharit@gmail.com',
-    'parimigayatri5@gmail.com',
-    '23051003@kiit.ac.in',
-    'yugayatra@gmail.com',
-  ];
+  // ─── PRIMARY: Gmail SMTP ────────────────────────────────────────────────────
+  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
+  const user = process.env.SMTP_USER?.trim();
+  const pass = process.env.SMTP_PASS?.trim();
+  const fromHeader = process.env.SMTP_FROM || `"The NorthEast Store" <${user}>`;
 
+  if (user && pass) {
+    // Derive safe, valid email addresses for headers
+    const defaultBusinessEmail = 'northeaststore.in@gmail.com';
+    const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
+    const replyToEmail = verifiedSenderEmail;
+    const bccEmails = [
+      verifiedSenderEmail,
+      'yaswanthharitaluru@gmail.com',
+      'yaswanthharit@gmail.com',
+      'parimigayatri5@gmail.com',
+      '23051003@kiit.ac.in',
+      'yugayatra@gmail.com',
+    ];
+
+    const connectionOptions = [
+      { port: 587, secure: false }, // TLS — more reliable on Vercel
+      { port: 465, secure: true },  // SSL fallback
+    ];
+
+    let lastError: unknown = null;
+    for (const option of connectionOptions) {
+      try {
+        console.log(`[Email Service] Attempting SMTP delivery via Port ${option.port}...`);
+        const transporter = nodemailer.createTransport({
+          host,
+          port: option.port,
+          secure: option.secure,
+          auth: { user, pass },
+          tls: { rejectUnauthorized: false },
+          connectionTimeout: 8000,
+          greetingTimeout: 8000,
+          socketTimeout: 8000,
+        });
+
+        await transporter.sendMail({
+          from: fromHeader,
+          to: userEmail,
+          replyTo: replyToEmail,
+          bcc: bccEmails,
+          subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
+          text: textContent,
+          html: htmlContent,
+        });
+
+        console.log(`[Email Service] SUCCESS via SMTP Port ${option.port}.`);
+        return; // Done!
+      } catch (error) {
+        console.warn(`[Email Service] SMTP Port ${option.port} failed: ${(error as Error).message}`);
+        lastError = error;
+      }
+    }
+
+    console.warn('[Email Service] SMTP failed, falling back to Resend...');
+  } else {
+    console.warn('[Email Service] SMTP credentials missing, trying Resend...');
+  }
+
+  // ─── FALLBACK: Resend API ───────────────────────────────────────────────────
+  const resendKey = process.env.RESEND_API_KEY?.trim();
   if (resendKey) {
     try {
       const resend = new Resend(resendKey);
-      console.log(`[Email] Using Resend API to deliver to ${userEmail} + ${allAdminEmails.length} admins`);
+      console.log(`[Email] Using Resend API to deliver to ${userEmail}`);
       const { error } = await resend.emails.send({
-        from: 'The NorthEast Store <orders@resend.dev>',
+        from: 'The NorthEast Store <onboarding@resend.dev>',
         to: [userEmail],
-        bcc: allAdminEmails,
         subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
         html: htmlContent,
         text: textContent,
@@ -162,89 +214,10 @@ Thank you for choosing The NorthEast Store! We've received your order...
       }
     } catch (resendError) {
       console.error('[Email] Resend threw:', (resendError as Error).message);
-      // fall through to SMTP
     }
   }
 
-  // ─── FALLBACK: Gmail SMTP ───────────────────────────────────────────────────
-  // --- FAIL-SAFE TRANSPORTER CONFIG ---
-  const host = process.env.SMTP_HOST?.trim() || 'smtp.gmail.com';
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASS?.trim();
-  const fromHeader = process.env.SMTP_FROM || `"The NorthEast Store" <${user}>`;
-
-  if (!user || !pass) {
-    console.error('[Email Service] CRITICAL ERROR: SMTP_USER or SMTP_PASS is missing in environment variables!');
-    return;
-  }
-
-
-  // Derive safe, valid email addresses for headers
-  const defaultBusinessEmail = 'northeaststore.in@gmail.com';
-  const verifiedSenderEmail = getValidEmail(process.env.SMTP_FROM, defaultBusinessEmail);
-  const replyToEmail = verifiedSenderEmail;
-  const bccEmails = [
-    verifiedSenderEmail,        // northeaststore.in@gmail.com (sender copy)
-    'yaswanthharitaluru@gmail.com',
-    'yaswanthharit@gmail.com',
-    'parimigayatri5@gmail.com',
-    '23051003@kiit.ac.in',
-    'yugayatra@gmail.com',
-  ];
-
-  // Define the two ways to connect
-  const connectionOptions = [
-    { port: 465, secure: true },  // SSL
-    { port: 587, secure: false }, // TLS
-  ];
-
-  let lastError: unknown = null;
-  for (const option of connectionOptions) {
-    try {
-      console.log(`[Email Service] Attempting delivery via Port ${option.port}...`);
-      
-      const transporter = nodemailer.createTransport({
-        host,
-        port: option.port,
-        secure: option.secure,
-        auth: { user, pass },
-        tls: { rejectUnauthorized: false },
-        connectionTimeout: 8000,  // 8s — must complete before Vercel's 10s limit
-        greetingTimeout: 8000,
-      });
-
-      await transporter.sendMail({
-        from: fromHeader,
-        to: userEmail,
-        replyTo: replyToEmail,
-        bcc: bccEmails, 
-        subject: `Your Order from The NorthEast Store (#${order.id.slice(-6)})`,
-        text: textContent,
-        html: htmlContent,
-        headers: {
-          'X-Priority': '1 (Highest)',
-          'X-MSMail-Priority': 'High',
-          'Importance': 'high'
-        }
-      });
-
-      console.log(`[Email Service] SUCCESS! Email sent via Port ${option.port}.`);
-      
-      // Also log to our persistent file for audit
-      const logPath = path.join(process.cwd(), 'order-emails.log');
-      fs.appendFileSync(logPath, `\n--- SUCCESS VIA PORT ${option.port} AT ${new Date().toLocaleString()} ---\nTo: ${userEmail}\n`);
-      
-      return; // Exit if successful
-    // ✅ Fix
-// ✅ Fix
-} catch (error) {
-  console.warn(`[Email Service] Port ${option.port} failed: ${(error as Error).message}`);
-  lastError = error;
-}
-  }
-
-  // If we get here, both ports failed
-  console.error('[Email Service] ALL DELIVERY ATTEMPTS FAILED:', lastError);
+  console.error('[Email Service] ALL DELIVERY ATTEMPTS FAILED');
 }
 
 export async function sendContactEmail(contactData: ContactFormData) {
@@ -360,9 +333,7 @@ export async function sendResetPasswordEmail(
 
       console.log(`[Email] Reset OTP sent to ${toEmail} via port ${option.port}`);
       return;
-    // ✅ Fix
-     // ✅ Fix
-} catch (error) {
+    } catch (error) {
   console.warn(`[Email] Port ${option.port} failed: ${(error as Error).message}`);
 }
   }

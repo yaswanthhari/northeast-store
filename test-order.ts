@@ -21,7 +21,7 @@ async function test() {
         items: {
           create: [
             {
-              productId: 'test-id', // This might fail if product doesn't exist
+              productId: 'cmpbmwe9i000quqkculrxnor7', // Use a real product ID from seed
               quantity: 1,
               price: 100,
             }
