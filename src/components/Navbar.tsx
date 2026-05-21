@@ -29,7 +29,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`${styles.header} glass`}>
+    <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
         <Link href="/" className={styles.logo}>
           <Image 
