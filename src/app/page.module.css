@@ -1,6 +1,8 @@
 .page {
   min-height: 100vh;
   background-color: #f9fbf9;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .hero {
@@ -9,12 +11,12 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  width: 100%;
 }
 
 .heroBackground {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -26,10 +28,7 @@
 
 .heroOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 2;
 }
@@ -37,15 +36,15 @@
 .heroContent {
   position: relative;
   z-index: 10;
+  width: 100%;
 }
 
 .heroTextWrapper {
   max-width: 800px;
   margin-left: 2rem;
+  margin-right: 2rem;
   position: relative;
 }
-
-
 
 .title {
   font-family: 'Playfair Display', serif;
@@ -77,7 +76,9 @@
 }
 
 .section {
-  padding: 8rem 0;
+  padding: 7rem 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .sectionHeader {
@@ -85,6 +86,7 @@
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 4rem;
+  gap: 1rem;
 }
 
 .sectionTitle {
@@ -120,6 +122,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2.5rem;
+  width: 100%;
 }
 
 .ribbon {
@@ -127,6 +130,7 @@
   color: white;
   padding: 3rem 0;
   box-shadow: 0 10px 30px rgba(18, 64, 43, 0.2);
+  overflow-x: hidden;
 }
 
 .ribbonGrid {
@@ -158,6 +162,7 @@
   padding: 10rem 0;
   background-color: white;
   position: relative;
+  overflow-x: hidden;
 }
 
 .missionGrid {
@@ -190,6 +195,7 @@
 .stats {
   display: flex;
   gap: 4rem;
+  flex-wrap: wrap;
 }
 
 .statItem h3 {
@@ -200,7 +206,7 @@
 }
 
 .statItem span {
-  color: #12402b; /* Darkened for better contrast */
+  color: #12402b;
   font-weight: 800;
   text-transform: uppercase;
   font-size: 0.9rem;
@@ -212,6 +218,11 @@
   overflow: hidden;
   box-shadow: 0 40px 80px rgba(18, 64, 43, 0.15);
   border: 8px solid white;
+}
+
+.missionImage {
+  width: 100%;
+  height: auto;
 }
 
 .rowGrid {
@@ -244,8 +255,10 @@
 
 .testimonialSection {
   padding: 10rem 0;
-  background-color: #0d2e1f; /* Slightly darker for better gold contrast */
-  background-image: radial-gradient(circle at 50% 50%, rgba(18, 64, 43, 0.8) 0%, #0d2e1f 100%), url("https://www.transparenttextures.com/patterns/leaf.png"); /* Added texture */
+  background-color: #0d2e1f;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(18, 64, 43, 0.8) 0%, #0d2e1f 100%),
+    url("https://www.transparenttextures.com/patterns/leaf.png");
   color: white;
   position: relative;
   overflow: hidden;
@@ -257,7 +270,7 @@
 }
 
 .sectionHeaderCenter .sectionTitle {
-  color: white; /* Force white for visibility */
+  color: white;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -344,11 +357,6 @@
 
 .recipeImage {
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.recipeCard:hover .recipeImage {
-  transform: scale(1.08);
 }
 
 .recipeTag {
@@ -405,4 +413,242 @@
 
 .recipeCard:hover .readMore::after {
   width: 100%;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+  .title {
+    font-size: 3.8rem;
+  }
+
+  .missionTitle {
+    font-size: 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.5rem;
+  }
+
+  .stats {
+    gap: 2.5rem;
+  }
+
+  .testimonialGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .recipeGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .section {
+    padding: 6rem 0;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 90vh;
+    padding: 6rem 0;
+  }
+
+  .heroTextWrapper {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 3rem;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    overflow-wrap: break-word;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    overflow-wrap: break-word;
+  }
+
+  .ctaGroup {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ctaGroup a,
+  .ctaGroup button {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .section {
+    padding: 5rem 0;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+    line-height: 1.2;
+  }
+
+  .missionSection {
+    padding: 6rem 0;
+  }
+
+  .missionGrid {
+    gap: 3rem;
+  }
+
+  .missionTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .missionText {
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .stats {
+    gap: 2rem;
+  }
+
+  .statItem h3 {
+    font-size: 2.5rem;
+  }
+
+  .rowGrid {
+    gap: 4rem;
+  }
+
+  .productGrid,
+  .productList,
+  .recipeGrid,
+  .testimonialGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .testimonialSection {
+    padding: 6rem 0;
+  }
+
+  .testimonialCard {
+    padding: 2rem;
+  }
+
+  .testimonialContent {
+    font-size: 1.05rem;
+  }
+
+  .recipeContent {
+    padding: 1.8rem;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 85vh;
+    padding: 5rem 0;
+  }
+
+  .title {
+    font-size: 2.3rem;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .section {
+    padding: 4rem 0;
+  }
+
+  .sectionTitle {
+    font-size: 1.9rem;
+  }
+
+  .missionTitle {
+    font-size: 2rem;
+  }
+
+  .missionText {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .stats {
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .statItem h3 {
+    font-size: 2rem;
+  }
+
+  .statItem span {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .ribbon {
+    padding: 2rem 0;
+  }
+
+  .ribbonGrid {
+    gap: 1.5rem;
+  }
+
+  .ribbonItem {
+    justify-content: flex-start;
+  }
+
+  .testimonialCard {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .testimonialContent {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .recipeImageWrapper {
+    height: 200px;
+  }
+
+  .recipeContent {
+    padding: 1.5rem;
+  }
+
+  .recipeContent h3 {
+    font-size: 1.25rem;
+  }
+
+  .rowTitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
 }

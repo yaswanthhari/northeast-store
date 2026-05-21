@@ -1,27 +1,41 @@
 .pageWrapper {
   min-height: 100vh;
-  padding-top: 4rem;
+  padding-top: 0;
   background-color: #fcfcfc;
+  overflow-x: hidden;
 }
 
+/* =========================================
+   HERO SECTION
+========================================= */
+
 .header {
-  padding: 4rem 0;
-  background-color: #12402b;
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, #12402b 0%, #0f5132 100%);
   color: white;
   text-align: center;
 }
 
 .title {
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
+  font-size: 3.5rem;
+  line-height: 1.1;
   margin-bottom: 1rem;
+  color: #ffffff;
 }
 
 .subtitle {
-  opacity: 0.8;
-  max-width: 600px;
+  opacity: 0.9;
+  max-width: 650px;
   margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.9);
 }
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
 
 .mainGrid {
   display: grid;
@@ -33,6 +47,7 @@
 @media (min-width: 992px) {
   .mainGrid {
     grid-template-columns: 280px 1fr;
+    align-items: start;
   }
 }
 
@@ -148,6 +163,10 @@
   color: white;
 }
 
+/* =========================================
+   CONTROLS
+========================================= */
+
 .controls {
   display: flex;
   justify-content: space-between;
@@ -157,6 +176,7 @@
   background: white;
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  gap: 1rem;
 }
 
 .count {
@@ -189,9 +209,13 @@
   cursor: pointer;
 }
 
+/* =========================================
+   PRODUCTS GRID
+========================================= */
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -220,4 +244,92 @@
   border-radius: 4px;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+  .header {
+    padding: 3rem 1rem;
+  }
+
+  .title {
+    font-size: 2.7rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .mainGrid {
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sortWrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .sidebar {
+    gap: 1.5rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .header {
+    padding: 2.5rem 1rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+    line-height: 1.15;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .mainGrid {
+    padding: 1.5rem 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    padding: 1rem;
+  }
+
+  .sortWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tagGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .priceLabels {
+    font-size: 0.8rem;
+  }
 }
