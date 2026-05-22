@@ -1,14 +1,24 @@
 .storyPage {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
+
+/* =========================================
+   HERO
+========================================= */
 
 .storyHero {
   background-color: var(--color-bg-main);
   color: var(--color-text-inverse);
   padding: 10rem 0 8rem;
   text-align: center;
-  background-image: linear-gradient(rgba(18, 64, 43, 0.7), rgba(18, 64, 43, 0.85)), url('/story_hero.png');
+  background-image:
+    linear-gradient(
+      rgba(18, 64, 43, 0.72),
+      rgba(18, 64, 43, 0.88)
+    ),
+    url('/story_hero.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -19,15 +29,20 @@
   color: var(--color-accent);
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .subtitle {
   font-size: 1.35rem;
   max-width: 700px;
   margin: 0 auto;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   line-height: 1.8;
 }
+
+/* =========================================
+   CONTENT SECTION
+========================================= */
 
 .contentSection {
   padding: 8rem 0;
@@ -38,11 +53,9 @@
 .contentSection::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: radial-gradient(var(--color-bg-alt) 1px, transparent 1px);
+  inset: 0;
+  background-image:
+    radial-gradient(var(--color-bg-alt) 1px, transparent 1px);
   background-size: 30px 30px;
   z-index: 0;
 }
@@ -62,11 +75,16 @@
   }
 }
 
+/* =========================================
+   TEXT CONTENT
+========================================= */
+
 .textContent h2 {
   font-size: 2.75rem;
   margin-bottom: 2rem;
   position: relative;
   display: inline-block;
+  line-height: 1.2;
 }
 
 .textContent h2::after {
@@ -81,7 +99,7 @@
 }
 
 .textContent p {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   margin-bottom: 1.5rem;
   color: var(--color-text-muted);
   line-height: 1.8;
@@ -91,6 +109,10 @@
   color: var(--color-primary);
   font-weight: 600;
 }
+
+/* =========================================
+   MISSION LIST
+========================================= */
 
 .missionList {
   display: flex;
@@ -102,17 +124,19 @@
 .missionList li {
   display: flex;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 1.25rem;
   background: var(--color-bg-card);
   padding: 1.5rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
-  transition: transform var(--transition-fast);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .missionList li:hover {
-  transform: translateX(10px);
+  transform: translateX(8px);
   box-shadow: var(--shadow-md);
 }
 
@@ -120,6 +144,7 @@
   font-size: 2rem;
   background: var(--color-bg-alt);
   width: 60px;
+  min-width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
@@ -138,7 +163,12 @@
 .missionList p {
   font-size: 0.95rem;
   margin: 0;
+  line-height: 1.6;
 }
+
+/* =========================================
+   IMAGE GRID
+========================================= */
 
 .imageGrid {
   display: grid;
@@ -168,6 +198,10 @@
   transform: scale(1.05);
 }
 
+/* =========================================
+   SISTERS SECTION
+========================================= */
+
 .sistersSection {
   padding: 8rem 0;
   background-color: var(--color-bg-alt);
@@ -178,6 +212,7 @@
   font-size: 3rem;
   margin-bottom: 5rem;
   position: relative;
+  line-height: 1.2;
 }
 
 .sectionTitle::after {
@@ -208,6 +243,14 @@
   z-index: 1;
   text-align: center;
   border: 1px solid var(--color-border);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.sisterCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
 }
 
 .cardBg {
@@ -229,10 +272,229 @@
   font-size: 1.75rem;
   margin-bottom: 0.75rem;
   font-family: var(--font-sans);
+  line-height: 1.2;
 }
 
 .sisterCard p {
   color: var(--color-text-muted);
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 500;
+  line-height: 1.6;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .storyHero {
+    padding: 8rem 0 6rem;
+    background-attachment: scroll;
+  }
+
+  .title {
+    font-size: 3.2rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .contentSection,
+  .sistersSection {
+    padding: 6rem 0;
+  }
+
+  .grid {
+    gap: 4rem;
+  }
+
+  .textContent h2 {
+    font-size: 2.3rem;
+  }
+
+  .imageWrapper {
+    height: 380px;
+  }
+
+  .sectionTitle {
+    font-size: 2.5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .storyHero {
+    padding: 6rem 1rem 5rem;
+    background-position: center;
+  }
+
+  .title {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+
+  .contentSection,
+  .sistersSection {
+    padding: 4rem 0;
+  }
+
+  .grid {
+    gap: 3rem;
+  }
+
+  .textContent h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .textContent p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .missionList li {
+    padding: 1.25rem;
+    gap: 1rem;
+    box-shadow: none;
+  }
+
+  .missionList li:hover {
+    transform: none;
+  }
+
+  .missionIcon {
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .imageGrid {
+    gap: 1rem;
+  }
+
+  .imageWrapper {
+    height: 250px;
+    border-radius: 14px;
+  }
+
+  .imageWrapperOffset {
+    margin-top: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .sistersList {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .sisterCard {
+    padding: 2rem 1.5rem;
+    box-shadow: none;
+  }
+
+  .sisterCard:hover {
+    transform: none;
+  }
+
+  .sisterCard h3 {
+    font-size: 1.45rem;
+  }
+
+  .sisterCard p {
+    font-size: 0.95rem;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .storyHero {
+    padding: 5rem 0.75rem 4rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .contentSection,
+  .sistersSection {
+    padding: 3rem 0;
+  }
+
+  .textContent h2 {
+    font-size: 1.7rem;
+  }
+
+  .textContent p {
+    font-size: 0.95rem;
+  }
+
+  .missionList {
+    gap: 1rem;
+  }
+
+  .missionList li {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .missionList strong {
+    font-size: 1rem;
+  }
+
+  .missionList p {
+    font-size: 0.9rem;
+  }
+
+  .imageGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .imageWrapper {
+    height: 220px;
+  }
+
+  .imageWrapperOffset {
+    margin-top: 0;
+  }
+
+  .sectionTitle {
+    font-size: 1.7rem;
+  }
+
+  .sisterCard {
+    padding: 1.5rem 1rem;
+  }
+
+  .sisterCard h3 {
+    font-size: 1.25rem;
+  }
+
+  .sisterCard p {
+    font-size: 0.9rem;
+  }
 }

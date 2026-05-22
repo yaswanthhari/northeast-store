@@ -1,54 +1,97 @@
 .page {
   min-height: 100vh;
-  background-color: #fcfcfc;
-  padding: 5rem 1.5rem;
+  padding: 6rem 1.5rem 4rem;
+  overflow-x: hidden;
+  background: #fcfcfc;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
+/* =========================================
+   BACK BUTTON
+========================================= */
+
 .backLink {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(18, 64, 43, 0.6);
+  color: rgba(18, 64, 43, 0.65);
   text-decoration: none;
   margin-bottom: 3rem;
-  transition: color 0.2s;
-  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .backLink:hover {
   color: #12402b;
+  transform: translateX(-3px);
 }
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
 
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 4rem;
+  gap: 3rem;
 }
 
 @media (min-width: 1024px) {
   .layout {
     grid-template-columns: 1.5fr 1fr;
+    align-items: start;
   }
 }
 
+/* =========================================
+   FORM CONTAINER
+========================================= */
+
+.formContainer {
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  border: 1px solid rgba(18, 64, 43, 0.06);
+  box-shadow: 0 6px 18px rgba(18, 64, 43, 0.04);
+  /* Fix CLS - reserve space */
+  min-height: 520px;
+  width: 100%;
+}
+
+/* =========================================
+   SECTION TITLES
+========================================= */
+
 .sectionTitle {
   font-family: 'Playfair Display', serif;
-  font-size: 1.75rem;
+  font-size: 2rem;
   color: #12402b;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  line-height: 1.2;
+  /* Fix CLS - reserve line height */
+  min-height: 2.4rem;
 }
 
 .sectionTitle svg {
   color: #d4af37;
+  /* Fix CLS - prevent icon reflow */
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
 }
+
+/* =========================================
+   FORM
+========================================= */
 
 .form {
   display: grid;
@@ -59,7 +102,9 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  /* Fix CLS - stable height per field */
+  min-height: 80px;
 }
 
 .fullWidth {
@@ -67,68 +112,90 @@
 }
 
 .label {
-  font-size: 0.85rem;
-  color: rgba(18, 64, 43, 0.6);
-  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(18, 64, 43, 0.65);
+  font-weight: 600;
+  /* Fix CLS - reserve label height */
+  min-height: 1.2rem;
+  display: block;
 }
 
 .input {
   width: 100%;
-  padding: 0.85rem;
-  background-color: white;
+  padding: 1rem;
+  background-color: #ffffff;
   border: 1px solid rgba(18, 64, 43, 0.1);
-  border-radius: 2px;
+  border-radius: 12px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
   color: #12402b;
+  font-size: 0.95rem;
+  /* Fix CLS - fixed height prevents reflow */
+  height: 52px;
+  box-sizing: border-box;
 }
 
 .input:focus {
   border-color: #12402b;
+  box-shadow: 0 0 0 4px rgba(18, 64, 43, 0.08);
 }
+
+/* =========================================
+   PAYMENT
+========================================= */
 
 .paymentMethod {
   margin-top: 3rem;
 }
 
 .codOption {
-  padding: 1rem;
+  padding: 1.2rem 1.25rem;
   border: 2px solid #12402b;
   background-color: white;
-  border-radius: 2px;
+  border-radius: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
   color: #12402b;
+  /* Fix CLS - stable height */
+  min-height: 56px;
 }
 
 .paymentNote {
-  font-size: 0.85rem;
-  color: rgba(18, 64, 43, 0.4);
+  font-size: 0.9rem;
+  color: rgba(18, 64, 43, 0.45);
   font-style: italic;
   margin-top: 1rem;
+  line-height: 1.6;
 }
+
+/* =========================================
+   ORDER BUTTON
+========================================= */
 
 .orderBtn {
   grid-column: span 2;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
   padding: 1.25rem;
-  background-color: #12402b;
+  background: linear-gradient(135deg, #12402b, #1c5c3e);
   color: white;
   border: none;
-  border-radius: 2px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 10px 20px rgba(18, 64, 43, 0.1);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 10px rgba(18, 64, 43, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Fix CLS - fixed button height */
+  height: 58px;
 }
 
 .orderBtn:hover:not(:disabled) {
-  background-color: #1c5c3e;
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(18, 64, 43, 0.2);
+  box-shadow: 0 8px 18px rgba(18, 64, 43, 0.12);
 }
 
 .orderBtn:disabled {
@@ -136,30 +203,46 @@
   cursor: not-allowed;
 }
 
+/* =========================================
+   SUMMARY
+========================================= */
+
+.summaryContainer {
+  width: 100%;
+}
+
 .summaryCard {
   background-color: white;
   padding: 2rem;
-  border-radius: 4px;
-  border: 1px solid rgba(18, 64, 43, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 24px;
+  border: 1px solid rgba(18, 64, 43, 0.06);
+  box-shadow: 0 6px 18px rgba(18, 64, 43, 0.04);
   position: sticky;
   top: 6rem;
+  /* Fix CLS - reserve space so card doesn't jump */
+  min-height: 320px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .summaryTitle {
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: #12402b;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(18, 64, 43, 0.1);
+  border-bottom: 1px solid rgba(18, 64, 43, 0.08);
+  /* Fix CLS */
+  min-height: 2rem;
 }
 
 .itemList {
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: auto;
   margin-bottom: 2rem;
-  padding-right: 0.5rem;
+  padding-right: 0.4rem;
+  /* Fix CLS - reserve min space */
+  min-height: 60px;
 }
 
 .item {
@@ -167,7 +250,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .itemDetails {
@@ -177,37 +260,39 @@
 }
 
 .qtyBadge {
-  width: 24px;
-  height: 24px;
-  background-color: rgba(18, 64, 43, 0.05);
+  width: 26px;
+  height: 26px;
+  background-color: rgba(18, 64, 43, 0.06);
   color: #12402b;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .itemName {
   color: #12402b;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .itemPrice {
-  color: rgba(18, 64, 43, 0.6);
+  color: rgba(18, 64, 43, 0.65);
+  white-space: nowrap;
 }
 
 .totals {
-  border-top: 1px solid rgba(18, 64, 43, 0.1);
+  border-top: 1px solid rgba(18, 64, 43, 0.08);
   padding-top: 1.5rem;
 }
 
 .totalRow {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  color: rgba(18, 64, 43, 0.6);
+  margin-bottom: 0.85rem;
+  color: rgba(18, 64, 43, 0.65);
 }
 
 .grandTotal {
@@ -215,10 +300,14 @@
   justify-content: space-between;
   margin-top: 1rem;
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: #12402b;
   font-weight: 700;
 }
+
+/* =========================================
+   SUCCESS PAGE
+========================================= */
 
 .successPage {
   min-height: 80vh;
@@ -231,9 +320,9 @@
 }
 
 .successIcon {
-  width: 80px;
-  height: 80px;
-  background-color: #12402b;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #12402b, #1c5c3e);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -244,16 +333,16 @@
 
 .successTitle {
   font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #12402b;
   margin-bottom: 1rem;
 }
 
 .successText {
-  color: rgba(18, 64, 43, 0.6);
-  max-width: 450px;
+  color: rgba(18, 64, 43, 0.65);
+  max-width: 500px;
   margin-bottom: 3rem;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .returnBtn {
@@ -261,25 +350,33 @@
   background-color: #12402b;
   color: white;
   text-decoration: none;
-  border-radius: 2px;
-  font-weight: 600;
-  transition: background-color 0.2s;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: background 0.25s ease;
+  display: inline-block;
 }
 
 .returnBtn:hover {
-  background-color: #1c5c3e;
+  opacity: 0.9;
 }
+
+/* =========================================
+   LOGIN BANNER
+========================================= */
 
 .loginBanner {
   background-color: #fff9e6;
-  border: 1px solid #ffeeba;
-  padding: 1rem 1.5rem;
-  border-radius: 4px;
+  border: 1px solid #ffe08a;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
   color: #856404;
+  flex-wrap: wrap;
+  /* Fix CLS - reserve exact height so layout doesn't jump */
+  min-height: 60px;
 }
 
 .loginInlineBtn {
@@ -289,6 +386,10 @@
   text-decoration: underline;
 }
 
+/* =========================================
+   LOADING + ERROR
+========================================= */
+
 .loadingContainer {
   min-height: 50vh;
   display: flex;
@@ -296,7 +397,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  color: rgba(18, 64, 43, 0.6);
+  color: rgba(18, 64, 43, 0.65);
 }
 
 .spinner {
@@ -314,18 +415,135 @@
 }
 
 .errorMessage {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background-color: #fde8ea;
+  border: 1px solid #f5c2c7;
+  color: #842029;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 12px;
   margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
+
+/* =========================================
+   ANIMATION
+========================================= */
 
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+  .page {
+    padding: 5rem 1rem 3rem;
+  }
+
+  .layout {
+    gap: 2rem;
+  }
+
+  .formContainer {
+    padding: 2rem;
+    border-radius: 20px;
+    min-height: unset;
+  }
+
+  .sectionTitle {
+    font-size: 1.7rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: span 1;
+  }
+
+  .orderBtn {
+    grid-column: span 1;
+  }
+
+  .summaryCard {
+    position: relative;
+    top: unset;
+    border-radius: 20px;
+  }
+
+  .successTitle {
+    font-size: 2.2rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .page {
+    padding: 4.5rem 0.9rem 2rem;
+  }
+
+  .formContainer {
+    padding: 1.5rem;
+    border-radius: 18px;
+  }
+
+  .sectionTitle {
+    font-size: 1.45rem;
+    gap: 0.5rem;
+  }
+
+  .input {
+    padding: 0.9rem;
+    border-radius: 10px;
+    height: 48px;
+  }
+
+  .codOption {
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+  }
+
+  .summaryCard {
+    padding: 1.5rem;
+    border-radius: 18px;
+  }
+
+  .summaryTitle {
+    font-size: 1.45rem;
+  }
+
+  .grandTotal {
+    font-size: 1.45rem;
+  }
+
+  .successTitle {
+    font-size: 1.9rem;
+  }
+
+  .successText {
+    font-size: 0.95rem;
+  }
+
+  .returnBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .loginBanner {
+    font-size: 0.9rem;
+  }
+
+  .formGroup {
+    min-height: unset;
+  }
+
+  .orderBtn {
+    height: 52px;
+  }
 }

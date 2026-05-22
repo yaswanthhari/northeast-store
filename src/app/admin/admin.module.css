@@ -3,7 +3,12 @@
   padding: 120px 2rem 4rem;
   background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
   color: #2d3436;
+  overflow-x: hidden;
 }
+
+/* =========================================
+   DASHBOARD HEADER
+========================================= */
 
 .dashboardHeader {
   max-width: 1200px;
@@ -11,6 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1.5rem;
 }
 
 .dashboardHeader h1 {
@@ -18,7 +24,12 @@
   font-weight: 700;
   color: #1a1a1a;
   letter-spacing: -0.5px;
+  line-height: 1.2;
 }
+
+/* =========================================
+   STATS GRID
+========================================= */
 
 .statsGrid {
   display: grid;
@@ -29,63 +40,95 @@
 }
 
 .statCard {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .statCard h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   color: #636e72;
   margin-bottom: 0.5rem;
+  letter-spacing: 1px;
 }
 
 .statCard .value {
   font-size: 2rem;
   font-weight: 700;
   color: #2d3436;
+  line-height: 1.2;
 }
+
+/* =========================================
+   TABLE CONTAINER
+========================================= */
 
 .userTableContainer {
   max-width: 1200px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow-x: auto;
 }
+
+/* =========================================
+   TABLE
+========================================= */
 
 .userTable {
   width: 100%;
   border-collapse: collapse;
+  min-width: 760px;
 }
 
 .userTable th {
   text-align: left;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.55);
   font-weight: 600;
   color: #636e72;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
 }
 
 .userTable td {
   padding: 1.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  vertical-align: middle;
 }
+
+.userTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   ROLE BADGES
+========================================= */
 
 .roleBadge {
   padding: 0.4rem 1rem;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .roleAdmin {
@@ -98,6 +141,10 @@
   color: #01579b;
 }
 
+/* =========================================
+   STATUS
+========================================= */
+
 .statusIndicator {
   display: inline-block;
   width: 8px;
@@ -106,30 +153,60 @@
   margin-right: 0.5rem;
 }
 
-.online { background: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
-.offline { background: #bdc3c7; }
+.online {
+  background: #2ecc71;
+  box-shadow: 0 0 10px #2ecc71;
+}
+
+.offline {
+  background: #bdc3c7;
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
 
 .actionButton {
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
   border-radius: 8px;
   border: 1px solid #dcdde1;
   background: white;
   color: #2f3640;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .actionButton:hover {
   background: #f5f6fa;
   border-color: #2f3640;
+  transform: translateY(-1px);
 }
 
-.promoteBtn { color: #d4af37; border-color: #d4af37; }
-.promoteBtn:hover { background: #fffcf0; }
+.promoteBtn {
+  color: #d4af37;
+  border-color: #d4af37;
+}
 
-.demoteBtn { color: #e74c3c; border-color: #e74c3c; }
-.demoteBtn:hover { background: #fff5f5; }
+.promoteBtn:hover {
+  background: #fffcf0;
+}
+
+.demoteBtn {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.demoteBtn:hover {
+  background: #fff5f5;
+}
+
+/* =========================================
+   EMAIL LOGS
+========================================= */
 
 .emailLogsSection {
   max-width: 1200px;
@@ -140,8 +217,8 @@
   background: #1e1e1e;
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   max-height: 500px;
   overflow-y: auto;
 }
@@ -150,7 +227,182 @@
   color: #dcdcdc;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.6;
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .adminContainer {
+    padding: 110px 1.5rem 3rem;
+  }
+
+  .dashboardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+
+  .dashboardHeader h1 {
+    font-size: 2.1rem;
+  }
+
+  .statsGrid {
+    gap: 1.5rem;
+  }
+
+  .statCard {
+    padding: 1.75rem;
+  }
+
+  .userTable th,
+  .userTable td {
+    padding: 1.2rem;
+  }
+
+  .logsContainer {
+    padding: 1.5rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .adminContainer {
+    padding: 100px 1rem 2rem;
+  }
+
+  .dashboardHeader {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboardHeader h1 {
+    font-size: 1.8rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .statCard {
+    padding: 1.4rem;
+    border-radius: 16px;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .statCard:hover {
+    transform: none;
+  }
+
+  .statCard .value {
+    font-size: 1.6rem;
+  }
+
+  .userTableContainer {
+    border-radius: 16px;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .userTable {
+    min-width: 700px;
+  }
+
+  .userTable th,
+  .userTable td {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .roleBadge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .actionButton {
+    min-height: 40px;
+    font-size: 0.8rem;
+  }
+
+  .emailLogsSection {
+    margin-top: 2rem;
+  }
+
+  .logsContainer {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .logsPre {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .adminContainer {
+    padding: 90px 0.75rem 1.5rem;
+  }
+
+  .dashboardHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .statCard {
+    padding: 1.2rem;
+    border-radius: 14px;
+  }
+
+  .statCard h3 {
+    font-size: 0.75rem;
+  }
+
+  .statCard .value {
+    font-size: 1.4rem;
+  }
+
+  .userTableContainer {
+    border-radius: 14px;
+  }
+
+  .userTable th,
+  .userTable td {
+    padding: 0.9rem;
+    font-size: 0.82rem;
+  }
+
+  .roleBadge {
+    font-size: 0.65rem;
+  }
+
+  .actionButton {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .logsContainer {
+    padding: 0.9rem;
+    border-radius: 14px;
+  }
+
+  .logsPre {
+    font-size: 0.72rem;
+  }
 }

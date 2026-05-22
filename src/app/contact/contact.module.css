@@ -5,6 +5,10 @@
   background-color: #fcfcfc;
 }
 
+/* =========================================
+   HERO
+========================================= */
+
 .hero {
   text-align: center;
   margin-bottom: 4rem;
@@ -16,12 +20,18 @@
   font-size: 3.5rem;
   color: #12402b;
   margin-bottom: 1rem;
+  line-height: 1.15;
 }
 
 .subtitle {
   color: rgba(18, 64, 43, 0.6);
   font-size: 1.1rem;
+  line-height: 1.7;
 }
+
+/* =========================================
+   CONTAINER
+========================================= */
 
 .container {
   max-width: 1000px;
@@ -29,11 +39,15 @@
   padding: 0 1.5rem;
 }
 
+/* =========================================
+   GLASS CARD
+========================================= */
+
 .glassCard {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(18, 64, 43, 0.1);
-  border-radius: 12px;
+  border-radius: 16px;
   display: grid;
   grid-template-columns: 1fr;
   overflow: hidden;
@@ -46,6 +60,10 @@
   }
 }
 
+/* =========================================
+   INFO SECTION
+========================================= */
+
 .infoSection {
   background-color: #12402b;
   padding: 3rem;
@@ -57,33 +75,39 @@
 
 .infoItem {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: flex-start;
 }
 
 .infoItem h3 {
-  font-size: 0.9rem;
-  opacity: 0.6;
-  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  opacity: 0.65;
+  margin-bottom: 0.35rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .infoItem p {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 500;
+  line-height: 1.6;
 }
 
 .iconBox {
   width: 48px;
+  min-width: 48px;
   height: 48px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #d4af37;
 }
+
+/* =========================================
+   FORM
+========================================= */
 
 .form {
   padding: 3rem;
@@ -104,20 +128,36 @@
   color: #12402b;
 }
 
-.formGroup input, .formGroup textarea {
-  padding: 0.85rem;
+.formGroup input,
+.formGroup textarea {
+  padding: 0.95rem 1rem;
   border: 1px solid rgba(18, 64, 43, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   outline: none;
   background: rgba(255, 255, 255, 0.5);
-  transition: all 0.2s;
+  font-size: 0.95rem;
+  width: 100%;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-.formGroup input:focus, .formGroup textarea:focus {
+.formGroup input:focus,
+.formGroup textarea:focus {
   border-color: #12402b;
   background: white;
   box-shadow: 0 4px 12px rgba(18, 64, 43, 0.05);
 }
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
 
 .submitBtn {
   margin-top: 1rem;
@@ -125,18 +165,179 @@
   background-color: #12402b;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   cursor: pointer;
-  transition: all 0.3s;
+  min-height: 50px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
 }
 
 .submitBtn:hover {
   background-color: #1c5c3e;
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(18, 64, 43, 0.2);
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .page {
+    padding-top: 7rem;
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .infoSection,
+  .form {
+    padding: 2.5rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .page {
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+  }
+
+  .hero {
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 2.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .glassCard {
+    border-radius: 14px;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .infoSection {
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .infoItem {
+    gap: 1rem;
+  }
+
+  .infoItem p {
+    font-size: 0.95rem;
+  }
+
+  .iconBox {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+  }
+
+  .form {
+    padding: 2rem 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .formGroup input,
+  .formGroup textarea {
+    padding: 0.9rem;
+    font-size: 0.92rem;
+  }
+
+  .submitBtn {
+    min-height: 46px;
+    font-size: 0.95rem;
+  }
+
+  .submitBtn:hover {
+    transform: none;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .page {
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero {
+    padding: 0 0.75rem;
+  }
+
+  .title {
+    font-size: 1.9rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .glassCard {
+    border-radius: 12px;
+  }
+
+  .infoSection {
+    padding: 1.5rem 1rem;
+  }
+
+  .form {
+    padding: 1.5rem 1rem;
+  }
+
+  .formGroup label {
+    font-size: 0.8rem;
+  }
+
+  .formGroup input,
+  .formGroup textarea {
+    font-size: 0.9rem;
+  }
+
+  .submitBtn {
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
 }

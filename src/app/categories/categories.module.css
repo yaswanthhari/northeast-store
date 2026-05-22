@@ -1,13 +1,19 @@
 .page {
   min-height: 100vh;
-  padding: 10rem 1.5rem 5rem;
-  background-color: #fcfcfc;
+  padding: 9rem 1.5rem 5rem;
+  background: linear-gradient(to bottom, #f8faf8 0%, #fcfcfc 100%);
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
+
+/* =========================================
+   HEADER
+========================================= */
 
 .header {
   text-align: center;
@@ -16,88 +22,258 @@
 
 .title {
   font-family: 'Playfair Display', serif;
-  font-size: 3.5rem;
+  font-size: 4rem;
+  line-height: 1.1;
   color: #12402b;
   margin-bottom: 1rem;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  width: 80px;
+  height: 4px;
+  background: #d4af37;
+  display: block;
+  margin: 1.5rem auto 0;
+  border-radius: 999px;
 }
 
 .subtitle {
-  color: rgba(18, 64, 43, 0.6);
-  font-size: 1.2rem;
+  color: rgba(18, 64, 43, 0.65);
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 620px;
+  margin: 0 auto;
 }
+
+/* =========================================
+   GRID
+========================================= */
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2.5rem;
+  width: 100%;
 }
+
+/* =========================================
+   CARD
+========================================= */
 
 .card {
   background: white;
-  border-radius: 12px;
-  padding: 2.5rem;
+  border-radius: 20px;
+  padding: 2.75rem 2rem;
   text-decoration: none;
-  border: 1px solid rgba(18, 64, 43, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(18, 64, 43, 0.06);
+  box-shadow: 0 12px 35px rgba(18, 64, 43, 0.05);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(212, 175, 55, 0.03),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
 }
 
 .card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 30px 60px rgba(18, 64, 43, 0.1);
-  border-color: rgba(18, 64, 43, 0.1);
+  transform: translateY(-12px);
+  box-shadow: 0 28px 60px rgba(18, 64, 43, 0.12);
+  border-color: rgba(18, 64, 43, 0.12);
 }
 
+.card:hover::before {
+  opacity: 1;
+}
+
+/* =========================================
+   ICON
+========================================= */
+
 .iconWrapper {
-  width: 70px;
-  height: 70px;
-  border-radius: 12px;
+  width: 78px;
+  height: 78px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.12);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.35s ease;
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.content {
+  position: relative;
+  z-index: 2;
 }
 
 .content h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.75rem;
+  font-size: 1.8rem;
+  line-height: 1.2;
   color: #12402b;
   margin-bottom: 1rem;
 }
 
 .content p {
-  color: rgba(18, 64, 43, 0.6);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  color: rgba(18, 64, 43, 0.65);
+  font-size: 1rem;
+  line-height: 1.75;
   margin-bottom: 2rem;
 }
+
+/* =========================================
+   BUTTON
+========================================= */
 
 .exploreBtn {
   font-weight: 700;
   color: #12402b;
   font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .exploreBtn::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -5px;
   left: 0;
   width: 0;
   height: 2px;
   background-color: #d4af37;
-  transition: width 0.3s;
+  transition: width 0.3s ease;
 }
 
 .card:hover .exploreBtn::after {
   width: 100%;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+  .page {
+    padding: 7rem 1.25rem 4rem;
+  }
+
+  .header {
+    margin-bottom: 3.5rem;
+  }
+
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .grid {
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 2.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .iconWrapper {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1.5rem;
+  }
+
+  .content h3 {
+    font-size: 1.5rem;
+  }
+
+  .content p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .page {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+    line-height: 1.15;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .card {
+    padding: 2rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .iconWrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+
+  .content h3 {
+    font-size: 1.35rem;
+  }
+
+  .content p {
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .exploreBtn {
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+  }
 }
