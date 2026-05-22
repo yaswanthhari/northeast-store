@@ -1,0 +1,728 @@
+.page {
+  min-height: 100vh;
+  background: #fcfcfc;
+  padding-bottom: 6rem;
+}
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+.breadcrumbBar {
+  background: white;
+  border-bottom: 1px solid rgba(18, 64, 43, 0.07);
+  padding: 0.75rem 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(18, 64, 43, 0.5);
+  flex-wrap: wrap;
+}
+
+.breadcrumb a {
+  color: rgba(18, 64, 43, 0.6);
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+  color: #12402b;
+}
+
+.breadcrumbCurrent {
+  color: #12402b;
+  font-weight: 600;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(18, 64, 43, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 1.5rem 0;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #12402b;
+}
+
+/* =========================================
+   MAIN GRID
+========================================= */
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 900px) {
+  .mainGrid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 4rem;
+  }
+}
+
+/* =========================================
+   SECTION 1 — GALLERY
+========================================= */
+
+.gallery {
+  position: sticky;
+  top: 5rem;
+}
+
+.mainImageWrapper {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid rgba(18, 64, 43, 0.07);
+}
+
+.mainImage {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.mainImageWrapper:hover .mainImage {
+  transform: scale(1.04);
+}
+
+.badgeNew {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  background: #12402b;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.badgeBestseller {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  background: #d4af37;
+  color: #12402b;
+  padding: 3px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+.badgeDiscount {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  background: #7a214b;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.thumb {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  transition: border-color 0.2s;
+}
+
+.thumb:hover {
+  border-color: rgba(18, 64, 43, 0.3);
+}
+
+.thumbActive {
+  border-color: #12402b;
+}
+
+.thumbImg {
+  object-fit: cover;
+}
+
+/* =========================================
+   SECTION 2 — PRODUCT INFO
+========================================= */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.infoTop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.categoryTag {
+  font-size: 0.78rem;
+  color: #d4af37;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.productName {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: #12402b;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ratingText {
+  font-size: 0.85rem;
+  color: rgba(18, 64, 43, 0.55);
+  margin-left: 6px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #12402b;
+  font-family: 'Playfair Display', serif;
+}
+
+.oldPrice {
+  font-size: 1.2rem;
+  color: rgba(18, 64, 43, 0.35);
+  text-decoration: line-through;
+}
+
+.saveBadge {
+  background: #e8f5ee;
+  color: #12402b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.stockRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stockDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.inStock  { background: #22c55e; }
+.outOfStock { background: #ef4444; }
+
+.stockText {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(18, 64, 43, 0.7);
+}
+
+/* =========================================
+   SECTION 3 — DESCRIPTION
+========================================= */
+
+.descSection {
+  border-top: 1px solid rgba(18, 64, 43, 0.08);
+  border-bottom: 1px solid rgba(18, 64, 43, 0.08);
+  padding: 1.25rem 0;
+}
+
+.descGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.descItem {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.descIcon {
+  color: #d4af37;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.descItem strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #12402b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+.descItem p {
+  font-size: 0.9rem;
+  color: rgba(18, 64, 43, 0.65);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* =========================================
+   WEIGHT OPTIONS
+========================================= */
+
+.weightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.weightLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #12402b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.weightOptions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.weightBtn {
+  padding: 0.5rem 1.2rem;
+  border: 1.5px solid rgba(18, 64, 43, 0.15);
+  border-radius: 6px;
+  background: white;
+  color: #12402b;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.weightBtn:hover {
+  border-color: #12402b;
+}
+
+.weightBtnActive {
+  border-color: #12402b;
+  background: #12402b;
+  color: white;
+}
+
+/* =========================================
+   SECTION 5 — QUANTITY
+========================================= */
+
+.quantityRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.qtyLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #12402b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qtyPicker {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid rgba(18, 64, 43, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.qtyBtn {
+  background: white;
+  border: none;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  color: #12402b;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.qtyBtn:hover {
+  background: rgba(18, 64, 43, 0.06);
+}
+
+.qtyValue {
+  min-width: 36px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #12402b;
+  border-left: 1.5px solid rgba(18, 64, 43, 0.1);
+  border-right: 1.5px solid rgba(18, 64, 43, 0.1);
+  padding: 0.6rem 0;
+}
+
+/* =========================================
+   SECTION 4 — ACTIONS
+========================================= */
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.addCartBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  background: #12402b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addCartBtn:hover:not(:disabled) {
+  background: #1a5c3e;
+}
+
+.addCartBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addedBtn {
+  background: #22c55e !important;
+}
+
+.buyNowBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  background: #d4af37;
+  color: #12402b;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.buyNowBtn:hover:not(:disabled) {
+  background: #c7a12b;
+}
+
+.buyNowBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wishlistBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid rgba(18, 64, 43, 0.15);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  color: #12402b;
+}
+
+.wishlistBtn:hover {
+  border-color: #d4af37;
+  color: #d4af37;
+}
+
+.wishlisted {
+  border-color: #d4af37;
+  color: #d4af37;
+  background: #fff9e6;
+}
+
+/* =========================================
+   SECTION 6 — DELIVERY
+========================================= */
+
+.deliveryBox {
+  background: #f7faf8;
+  border: 1px solid rgba(18, 64, 43, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.deliveryItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.deliveryItem svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.deliveryItem strong {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #12402b;
+  margin-bottom: 0.1rem;
+}
+
+.deliveryItem span {
+  font-size: 0.82rem;
+  color: rgba(18, 64, 43, 0.6);
+  line-height: 1.5;
+}
+
+/* =========================================
+   ORIGIN SECTION
+========================================= */
+
+.originSection {
+  background: linear-gradient(135deg, #12402b, #1a5c3e);
+  border-radius: 16px;
+  padding: 3rem;
+  margin-bottom: 4rem;
+  color: white;
+}
+
+.originTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.originText {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 700px;
+}
+
+/* =========================================
+   SECTION 7 — RELATED PRODUCTS
+========================================= */
+
+.relatedSection {
+  margin-bottom: 2rem;
+}
+
+.relatedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.relatedTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #12402b;
+  position: relative;
+}
+
+.relatedTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: #d4af37;
+}
+
+.viewAllLink {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+  gap: 1.5rem;
+}
+
+/* =========================================
+   MOBILE STICKY FOOTER
+========================================= */
+
+.mobileSticky {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileSticky {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.85rem 1rem;
+    background: white;
+    border-top: 1px solid rgba(18, 64, 43, 0.1);
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+
+  .mobileStickyPrice {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #12402b;
+    white-space: nowrap;
+    margin-right: 0.25rem;
+  }
+
+  .mobileStickyBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem 0.5rem;
+    background: #12402b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mobileStickyBuyBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem 0.5rem;
+    background: #d4af37;
+    color: #12402b;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Hide desktop actions on mobile — use sticky bar instead */
+  .actions {
+    display: none;
+  }
+
+  .page {
+    padding-bottom: 5rem;
+  }
+
+  .gallery {
+    position: relative;
+    top: unset;
+  }
+
+  .productName {
+    font-size: 1.7rem;
+  }
+
+  .price {
+    font-size: 1.6rem;
+  }
+
+  .originSection {
+    padding: 2rem 1.25rem;
+    border-radius: 12px;
+  }
+
+  .originTitle {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productName {
+    font-size: 1.45rem;
+  }
+
+  .thumb {
+    width: 58px;
+    height: 58px;
+  }
+
+  .relatedTitle {
+    font-size: 1.5rem;
+  }
+
+  .originSection {
+    padding: 1.5rem 1rem;
+  }
+}
